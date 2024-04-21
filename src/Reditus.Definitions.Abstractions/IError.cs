@@ -1,9 +1,9 @@
-namespace Reditus.Abstractions;
+namespace Reditus.Definitions.Abstractions;
 
 using System.Collections.Frozen;
 
 /// <summary>
-/// Represents an error object.
+/// Describes an Error object.
 /// </summary>
 public interface IError
 {
