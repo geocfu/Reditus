@@ -1,4 +1,4 @@
-namespace Reditus.Definitions.Errors;
+namespace Reditus.Definitions;
 
 using System.Collections.Frozen;
 using Abstractions;

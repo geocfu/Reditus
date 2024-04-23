@@ -6,11 +6,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus", "src\Reditus\Redi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Definitions.Abstractions", "src\Reditus.Definitions.Abstractions\Reditus.Definitions.Abstractions.csproj", "{91B40EB9-1289-44D6-9704-CF7ED73DFE15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Definitions.Errors", "src\Reditus.Definitions.Errors\Reditus.Definitions.Errors.csproj", "{BD73C60F-7FE0-40B3-A98C-5C2D79A05315}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4AC9EE38-3A6A-448F-8D39-2A1025E4831B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.UnitTests", "tests\Reditus.UnitTests\Reditus.UnitTests.csproj", "{A4EE40D7-D426-42F7-B8DC-CCCB125458E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Definitions", "src\Reditus.Definitions\Reditus.Definitions.csproj", "{5EE5EBDC-E453-4344-8255-1F7AB5243ACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,19 +26,19 @@ Global
 		{91B40EB9-1289-44D6-9704-CF7ED73DFE15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91B40EB9-1289-44D6-9704-CF7ED73DFE15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91B40EB9-1289-44D6-9704-CF7ED73DFE15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD73C60F-7FE0-40B3-A98C-5C2D79A05315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD73C60F-7FE0-40B3-A98C-5C2D79A05315}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD73C60F-7FE0-40B3-A98C-5C2D79A05315}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD73C60F-7FE0-40B3-A98C-5C2D79A05315}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4EE40D7-D426-42F7-B8DC-CCCB125458E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4EE40D7-D426-42F7-B8DC-CCCB125458E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4EE40D7-D426-42F7-B8DC-CCCB125458E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4EE40D7-D426-42F7-B8DC-CCCB125458E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE5EBDC-E453-4344-8255-1F7AB5243ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE5EBDC-E453-4344-8255-1F7AB5243ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE5EBDC-E453-4344-8255-1F7AB5243ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE5EBDC-E453-4344-8255-1F7AB5243ACF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C024F6B7-D636-4B55-BA46-E35F815F3B62} = {6E8AAF2F-FD59-4891-AB0D-E012DF8D780D}
 		{91B40EB9-1289-44D6-9704-CF7ED73DFE15} = {6E8AAF2F-FD59-4891-AB0D-E012DF8D780D}
-		{BD73C60F-7FE0-40B3-A98C-5C2D79A05315} = {6E8AAF2F-FD59-4891-AB0D-E012DF8D780D}
 		{A4EE40D7-D426-42F7-B8DC-CCCB125458E7} = {4AC9EE38-3A6A-448F-8D39-2A1025E4831B}
+		{5EE5EBDC-E453-4344-8255-1F7AB5243ACF} = {6E8AAF2F-FD59-4891-AB0D-E012DF8D780D}
 	EndGlobalSection
 EndGlobal

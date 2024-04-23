@@ -1,5 +1,6 @@
 namespace Reditus;
 
+using Definitions;
 using Definitions.Abstractions;
 
 /// <summary>
@@ -8,23 +9,55 @@ using Definitions.Abstractions;
 public class Result : IResult
 {
     /// <summary>
+    /// The internal state of the Result.
+    /// </summary>
+    private readonly ResultState _state;
+
+    /// <summary>
+    /// The internal error, if any, of the Result.
+    /// </summary>
+    private readonly IError? _error;
+
+    /// <summary>
     /// Gets a value indicating whether Result is successful.
     /// </summary>
-    public bool IsSuccessful => Error is null;
+    public bool IsSuccessful => _state is ResultState.Successful;
 
     /// <summary>
     /// Gets a value indicating whether Result is failed.
     /// </summary>
-    public bool IsFailed => !IsSuccessful;
+    public bool IsFailed => _state is ResultState.Failed;
 
     /// <inheritdoc />
-    public IError? Error { get; }
+    public IError? Error
+    {
+        get
+        {
+            if (_state is ResultState.Successful)
+            {
+                throw new InvalidOperationException("Accessing the Error property of a successful Result is invalid.");
+            }
+
+            return _error;
+        }
+
+        private init
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value), "The Error property of a failed Result cannot be null.");
+            }
+
+            _error = value;
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
     protected Result()
     {
+        _state = ResultState.Successful;
     }
 
     /// <summary>
@@ -34,13 +67,7 @@ public class Result : IResult
     /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
     protected Result(IError error)
     {
-        if (error is null)
-        {
-            throw new ArgumentNullException(
-                nameof(error),
-                "Error cannot be null. Did you mean to use the Successful() method?");
-        }
-
+        _state = ResultState.Failed;
         Error = error;
     }
 
@@ -65,10 +92,18 @@ public class Result : IResult
 public class Result<T> : IResult<T>
 {
     /// <summary>
-    /// The value, if any, of the Result.
+    /// The internal state of the Result.
+    /// </summary>
+    private readonly ResultState _state;
+
+    /// <summary>
+    /// The internal value, if any, of the successful Result.
     /// </summary>
     private readonly T? _value;
 
+    /// <summary>
+    /// The internal error, if any, of the Result.
+    /// </summary>
     private readonly IError? _error;
 
     /// <inheritdoc />
@@ -78,9 +113,9 @@ public class Result<T> : IResult<T>
     {
         get
         {
-            if (Error is not null)
+            if (_state is ResultState.Failed)
             {
-                throw new InvalidOperationException("Trying to access the Value of a failed Result is not valid.");
+                throw new InvalidOperationException("Accessing the Value property of a failed Result is invalid.");
             }
 
             return _value;
@@ -88,16 +123,11 @@ public class Result<T> : IResult<T>
 
         private init
         {
-            if (Error is not null)
-            {
-                throw new InvalidOperationException("Trying to access the Value of a failed Result is not valid.");
-            }
-
             if (value is null)
             {
                 throw new ArgumentNullException(
                     nameof(value),
-                    "Value cannot be null. Did you mean to use the Result.Successful() method instead?");
+                    "The Value property of a successful Result cannot be null. Did you mean to use the Result.Successful() method instead?");
             }
 
             _value = value;
@@ -107,21 +137,21 @@ public class Result<T> : IResult<T>
     /// <summary>
     /// Gets a value indicating whether Result is successful.
     /// </summary>
-    public bool IsSuccessful => Error is null;
+    public bool IsSuccessful => _state is ResultState.Successful;
 
     /// <summary>
     /// Gets a value indicating whether Result is failed.
     /// </summary>
-    public bool IsFailed => !IsSuccessful;
+    public bool IsFailed => _state is ResultState.Failed;
 
     /// <inheritdoc />
     public IError? Error
     {
         get
         {
-            if (Value is not null)
+            if (_state is ResultState.Successful)
             {
-                throw new InvalidOperationException("Trying to access the Error of a successful Result is not valid.");
+                throw new InvalidOperationException("Accessing the Error property of a successful Result is invalid.");
             }
 
             return _error;
@@ -129,11 +159,6 @@ public class Result<T> : IResult<T>
 
         private init
         {
-            if (Value is not null)
-            {
-                throw new InvalidOperationException("Trying to access the Error of a successful Result is not valid.");
-            }
-
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value), "The Error property of a failed Result cannot be null.");
@@ -150,6 +175,7 @@ public class Result<T> : IResult<T>
     /// <exception cref="ArgumentNullException">Thrown when value is null.</exception>
     protected Result(T value)
     {
+        _state = ResultState.Successful;
         Value = value;
     }
 
@@ -160,6 +186,7 @@ public class Result<T> : IResult<T>
     /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
     protected Result(IError error)
     {
+        _state = ResultState.Failed;
         Error = error;
     }
 

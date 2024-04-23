@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Reditus.Definitions.Abstractions\Reditus.Definitions.Abstractions.csproj" />
-      <ProjectReference Include="..\Reditus.Definitions.Errors\Reditus.Definitions.Errors.csproj" />
+      <ProjectReference Include="..\Reditus.Definitions\Reditus.Definitions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
