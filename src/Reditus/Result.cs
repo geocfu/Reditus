@@ -6,12 +6,12 @@ using Definitions.Abstractions;
 /// <summary>
 /// Represents a Result object.
 /// </summary>
-public class Result : IResult
+public class Result
 {
     /// <summary>
     /// The internal state of the Result.
     /// </summary>
-    private readonly ResultState _state;
+    internal readonly ResultState _state;
 
     /// <summary>
     /// The internal error, if any, of the Result.
@@ -28,7 +28,9 @@ public class Result : IResult
     /// </summary>
     public bool IsFailed => _state is ResultState.Failed;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the Error, if any, attached to the Result.
+    /// </summary>
     public IError? Error
     {
         get
@@ -86,27 +88,19 @@ public class Result : IResult
 }
 
 /// <summary>
-/// Represents a Result{T} object.
+/// Represents a Result object that can return a value.
 /// </summary>
-/// <typeparam name="T">The type of the Result.</typeparam>
-public class Result<T> : IResult<T>
+/// <typeparam name="T">The type produced by this <see cref="T:Result{T}" />.</typeparam>
+public class Result<T> : Result
 {
-    /// <summary>
-    /// The internal state of the Result.
-    /// </summary>
-    private readonly ResultState _state;
-
     /// <summary>
     /// The internal value, if any, of the successful Result.
     /// </summary>
     private readonly T? _value;
 
     /// <summary>
-    /// The internal error, if any, of the Result.
+    /// Gets the value produced of the Result.
     /// </summary>
-    private readonly IError? _error;
-
-    /// <inheritdoc />
     /// <exception cref="InvalidOperationException">Thrown when Result is Failed.</exception>
     /// <exception cref="ArgumentNullException">Thrown when Result is Successful.</exception>
     public T? Value
@@ -135,47 +129,12 @@ public class Result<T> : IResult<T>
     }
 
     /// <summary>
-    /// Gets a value indicating whether Result is successful.
-    /// </summary>
-    public bool IsSuccessful => _state is ResultState.Successful;
-
-    /// <summary>
-    /// Gets a value indicating whether Result is failed.
-    /// </summary>
-    public bool IsFailed => _state is ResultState.Failed;
-
-    /// <inheritdoc />
-    public IError? Error
-    {
-        get
-        {
-            if (_state is ResultState.Successful)
-            {
-                throw new InvalidOperationException("Accessing the Error property of a successful Result is invalid.");
-            }
-
-            return _error;
-        }
-
-        private init
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value), "The Error property of a failed Result cannot be null.");
-            }
-
-            _error = value;
-        }
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="Result{T}"/> class.
     /// </summary>
     /// <param name="value">The value of the Result.</param>
     /// <exception cref="ArgumentNullException">Thrown when value is null.</exception>
     protected Result(T value)
     {
-        _state = ResultState.Successful;
         Value = value;
     }
 
@@ -185,9 +144,8 @@ public class Result<T> : IResult<T>
     /// <param name="error">The error to attach to the Result.</param>
     /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
     protected Result(IError error)
+        : base(error)
     {
-        _state = ResultState.Failed;
-        Error = error;
     }
 
     /// <summary>

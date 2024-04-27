@@ -26,7 +26,7 @@ public class Error : IError
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new ArgumentException("The property Message must have a value.", nameof(message));
+            throw new ArgumentException("The Message property must have a value.", nameof(message));
         }
 
         Message = message;
