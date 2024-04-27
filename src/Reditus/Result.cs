@@ -161,4 +161,20 @@ public class Result<T> : Result
     /// <param name="error">The error of the result.</param>
     /// <returns>A failed Result instance.</returns>
     public static Result<T> Failed(IError error) => new(error);
+
+    /// <summary>
+    /// Creates a failed Result from a failed Result.
+    /// </summary>
+    /// <param name="result">The Result to copy from.</param>
+    /// <returns>A failed Result instance.</returns>
+    /// <typeparam name="TY">The type of the Result to copy from.</typeparam>
+    public static Result<T> Failed<TY>(Result<TY> result)
+    {
+        if (result.IsSuccessful)
+        {
+            throw new InvalidOperationException("Accessing the Value property of a failed Result is invalid.");
+        }
+
+        return new Result<T>(result.Error!);
+    }
 }
