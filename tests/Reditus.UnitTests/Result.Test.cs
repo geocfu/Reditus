@@ -110,6 +110,24 @@ public class ResultTest
     }
 
     [Fact]
+    public void Converting_Failed_Result_Of_T_To_Failed_Result_Of_TY_Should_Succeed()
+    {
+        var resultOfT = Result<string>.Failed(new Error("This is an error."));
+        var resultOfTy = Result<int>.Failed(resultOfT);
+
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(resultOfTy);
+            Assert.NotNull(resultOfTy.Error);
+            Assert.Equal("This is an error.", resultOfTy.Error.Message);
+            Assert.Empty(resultOfTy.Error.Metadata);
+            Assert.Null(resultOfTy.Error.Exception);
+            Assert.False(resultOfTy.IsSuccessful);
+            Assert.True(resultOfTy.IsFailed);
+        });
+    }
+
+    [Fact]
     public void Creating_Successful_Result_Of_T_Should_Succeed()
     {
         var value = new object();
