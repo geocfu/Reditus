@@ -172,7 +172,7 @@ public class Result<T> : Result
     {
         if (result.IsSuccessful)
         {
-            throw new InvalidOperationException("Accessing the Value property of a failed Result is invalid.");
+            throw new InvalidOperationException("Converting a Successful Result to a Failed Result is invalid.");
         }
 
         return new Result<T>(result.Error!);
