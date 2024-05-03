@@ -54,17 +54,17 @@ public async Task<Result> ExecuteJob()
             // create an Error indicating the reason of failure
             var error = new Error("Cleanup job was not executed.");
 
-            return Result.Fail(error);
+            return Result.Failed(error);
         }
 
-        return Result.Ok();
+        return Result.Successful();
     }
     catch (Exception ex)
     {
         // create an Error and attach the exception
         var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        return Result.Fail(error);
+        return Result.Failed(error);
     }
 }
 ```
@@ -97,17 +97,17 @@ public async Task<Result<int>> ExecuteJob()
             // create an Error indicating the reason of failure
             var error = new Error("Cleanup job was not executed.");
 
-            return Result<int>.Fail(error);
+            return Result<int>.Failed(error);
         }
 
-        return Result<int>.Ok(jobId);
+        return Result<int>.Successfull(jobId);
     }
     catch (Exception ex)
     {
         // create an Error and attach the exception
         var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        return Result<int>.Fail(error);
+        return Result<int>.Failed(error);
     }
 }
 ```
@@ -186,17 +186,17 @@ public async Task<Result<IEnumerable<Project>>> GetProjects()
         {
             var error = new NotFoundError(); // <-- the new NotFoundError Error class
 
-            return Result<int>.Fail(error);
+            return Result<int>.Failed(error);
         }
 
-        return Result<int>.Ok(jobId);
+        return Result<int>.Successful(jobId);
     }
     catch (Exception ex)
     {
         // create an Error and attach the exception
         var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        return Result<int>.Fail(error);
+        return Result<int>.Failed(error);
     }
 }
 ```
