@@ -1,18 +1,23 @@
-# Reditus: The Result pattern for .NET
+# Reditus
 
 Reditus, is a Result pattern library for every .NET application.
 
 ## Getting Started
 
-`Install-Package Reditus`
+You can install Reditus with NuGet:
+
+```text
+ Install-Package Reditus
+```
 
 ### Features
 
-- **Versatile**. Can be used in any .NET project.
-- **Immutable**. Once a Result is created, it cannot be changed.
-- **Detailed on Failure**. A Result, when failed, contains a specific IError class.
-- **Extensible**. Extend the Error class by introducing your very own Error classes.
-- **Fully tested**. The code has full coverage.
+- **Versatile** — Can be used in any .NET project.
+- **Immutable** — Once a Result is created, it cannot be changed.
+- **Detailed on Failure** — A Result, when failed, contains a specific IError class.
+- **Thread safe** — Results are immutable and by nature, safe to work with in multithreaded scenarios.
+- **Extensible** — Extend the Error class by introducing your very own Error classes.
+- **Fully tested** — The code has full coverage.
 
 ## Usage
 
@@ -210,3 +215,4 @@ public sealed class ApplicationError : Error
 
 The `Error` class provides 3 constructors, so you are free to use whichever suits your needs
 best. [See definition](src/Reditus.Definitions/Error.cs)
+
