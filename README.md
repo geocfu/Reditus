@@ -1,7 +1,6 @@
 # Reditus: The Result pattern for .NET
 
-Reditus, inspired by the Latin word for "reditus,", which means result, is a Result pattern library for every .net
-application.
+Reditus, is a Result pattern library for every .NET application.
 
 ## Getting Started
 
@@ -9,83 +8,205 @@ application.
 
 ### Features
 
-- Can be used in any .net project.
-- Immutable. Once a Result is created, it cannot be changed.
-- Fully extensible. Create new Results or extend the Error functionality.
-- Fully tested.
+- **Versatile**. Can be used in any .NET project.
+- **Immutable**. Once a Result is created, it cannot be changed.
+- **Detailed on Failure**. A Result, when failed, contains a specific IError class.
+- **Extensible**. Extend the Error class by introducing your very own Error classes.
+- **Fully tested**. The code has full coverage.
 
 ## Usage
 
 Result objects can hold values or simply be used as flow state control. The values can be anything. A class, a
 value-type, a struct, anything.
 
-### Successful Result
+### Creating a Result
 
-Successful results can have a `value` or simply be used as flow state control.
-
-```csharp
-var result = Result.Successful(); // no return value
-
-var value = 1;
-var result = Result<int>.Successful(value); // with return value
-```
-
-### Failed Result
-
-Failed results always contain an Error object indicating the reason of failure but can also indicate a return value on
-successful operation.
+Typically, the `Result` class is being used by methods that don't return a value.
 
 ```csharp
+var result = Result.Successful();
+
 var error = new Error("An error occured.");
-var result = Result.Failed(error); // simple error indicating reason of failure
-var result = Result<int>.Failed(error); // indicating that the value should be int on successful operation
+var result = Result.Failed(error);
 
-
-var exception = new Exception();
-var result = Result.Failed(error, exception); // with an exception
-var result = Result<int>.Failed(error, exception);
-
-var metadata = new Dictionary<string, object> { { "key", "value" } };
-var result = Result.Failed(error, metadata); // with metadata
-var result = Result<int>.Failed(error, metadata);
-
-var result = Result.Failed(error, exception, metadata); // with exception and metadata
-var result = Result<int>.Failed(error, exception, metadata);
+// the error can also hold an exception and/or metadata
+var error = new Error("An error occured.", new Exception());
+var error = new Error("An error occured.", new Dictionary<string, object> { { "EventId", "4576" } });
+var error = new Error("An error occured.", new Exception(), new Dictionary<string, object> { { "EventId", "4576" } });
 ```
 
-In a real world scenario, a Result object can be used as following.
+An example usage of the `Result` class.
 
 ```csharp
-public async Task<Result<IEnumerable<ProjectDto>>> GetProjectsAsync(CancellationToken cancellationToken)
+public async Task<Result> ExecuteJob()
 {
     try
     {
-        // call a method that returns a Result
-        Result<IEnumerable<Project>> result = await _projectRepository.GetProjectsAsync(cancellationToken);
+        var jobId = ExecuteCleanupJob();
 
-        // check if the operation was successful
-        if (!result.IsSuccessful) // or if (result.IsFailed)
+        if (jobId == 0)
         {
-            // return a Result of different type by converting the previous
-            return Result.Fail<IEnumerable<ProjectDto>>(result);
+            // create an Error indicating the reason of failure
+            var error = new Error("Cleanup job was not executed.");
+
+            return Result.Fail(error);
         }
 
-        ProjectMapper projectMapper = new ProjectMapper();
-
-        IEnumerable<ProjectDto>> projectDtos = result.Value.Select(p => projectMapper.ToProjectDto(p));
-
-        return Result<IEnumerable<ProjectDto>>>.Ok(projectDtos);
+        return Result.Ok();
     }
     catch (Exception ex)
     {
-        _logger.Error(e, "An unexpected error occured while trying to retrieve the projects");
+        // create an Error and attach the exception
+        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        // create an Error indicating the reason of failure and also attach the exception caused it
-        Error error = new Error("An unexpected error occured while trying to retrieve projects.", ex);
-
-        return Result<IEnumerable<ProjectDto>>.Fail(error);
+        return Result.Fail(error);
     }
 }
 ```
 
-## Extending the Result
+The `Result<T>` class is being used by methods that return a value.
+
+```csharp
+var result = Result<int>.Successful(1);
+
+var error = new Error("An error occured.");
+var result = Result<int>.Failed(error);
+
+// the error can also hold an exception and/or metadata
+var error = new Error("An error occured.", new Exception());
+var error = new Error("An error occured.", new Dictionary<string, object> { { "EventId", "4576" } });
+var error = new Error("An error occured.", new Exception(), new Dictionary<string, object> { { "EventId", "4576" } });
+```
+
+An example usage of the `Result<T>` class.
+
+```csharp
+public async Task<Result<int>> ExecuteJob()
+{
+    try
+    {
+        var jobId = ExecuteCleanupJob();
+
+        if (jobId == 0)
+        {
+            // create an Error indicating the reason of failure
+            var error = new Error("Cleanup job was not executed.");
+
+            return Result<int>.Fail(error);
+        }
+
+        return Result<int>.Ok(jobId);
+    }
+    catch (Exception ex)
+    {
+        // create an Error and attach the exception
+        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
+
+        return Result<int>.Fail(error);
+    }
+}
+```
+
+### The anatomy of a Result
+
+A `Result` holds certain information about itself.
+
+```csharp
+var sucessfulResult = Result.Successful();
+
+sucessfulResult.IsSuccessful // true
+sucessfulResult.IsFailed // false
+sucessfulResult.Error // throws InvalidOperationException as the result is not in a failed state
+
+
+var failedResult = Result.Failed(new Error("Operation failed.");
+
+failedResult.IsSuccessful // false
+failedResult.IsFailed // true
+failedResult.Error // IError instance
+```
+
+When the `Result<T>` holds a return value.
+
+```csharp
+var sucessfulResult = Result<int>.Successful(1);
+
+sucessfulResult.IsSuccessful // true
+sucessfulResult.IsFailed // false
+sucessfulResult.Value // 1
+sucessfulResult.Error // throws InvalidOperationException as the result is not in a fail state
+
+
+var failedResult = Result<int>.Failed(new Error("Operation failed.");
+
+failedResult.IsSuccessful // false
+failedResult.IsFailed // true
+failedResult.Value // throws InvalidOperationException as the result is not in a success state
+failedResult.Error // IError instance
+```
+
+### Extending
+
+You can introduce your very own Error classes by extending the existing one.
+
+The below custom `NotFoundError` class is being used when an application might need to return a NotFound 404 response.
+
+```csharp
+public interface IHttpError : IError
+{
+    public HttpStatusCode HttpStatusCode { get; }
+}
+
+public sealed class NotFoundError : Error, IHttpError
+{
+    public HttpStatusCode HttpStatusCode => HttpStatusCode.NotFound;
+
+    public NotFoundError(string message = "The request resource was not found.")
+        : base(message)
+    {
+    }
+}
+```
+
+An example of the above custom `Error` class.
+
+```csharp
+public async Task<Result<IEnumerable<Project>>> GetProjects()
+{
+    try
+    {
+        var projects = await GetProjects();
+
+        if (!projects.Any())
+        {
+            var error = new NotFoundError(); // <-- the new NotFoundError Error class
+
+            return Result<int>.Fail(error);
+        }
+
+        return Result<int>.Ok(jobId);
+    }
+    catch (Exception ex)
+    {
+        // create an Error and attach the exception
+        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
+
+        return Result<int>.Fail(error);
+    }
+}
+```
+
+You can also introduce simple `Error` classes to better reflect your domain.
+
+```csharp
+public sealed class ApplicationError : Error
+{
+    public ApplicationError(string eventId, string message, Exception exception, Dictionary<string, object> metadata)
+        : base(message, exception, metadata)
+    {
+    }
+}
+```
+
+The `Error` class provides 3 constructors, so you are free to use whichever suits your needs
+best. [See definition](src/Reditus.Definitions/Error.cs)

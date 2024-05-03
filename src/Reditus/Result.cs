@@ -199,7 +199,7 @@ public sealed class Result<T>
     public static Result<T> Failed(IError error) => new(error);
 
     /// <summary>
-    /// Creates a failed Result from a failed Result.
+    /// Creates a failed Result.
     /// </summary>
     /// <param name="result">The Result to copy from.</param>
     /// <returns>A failed Result instance.</returns>
