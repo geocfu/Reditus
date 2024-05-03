@@ -4,7 +4,7 @@ Reditus, is a Result pattern library for every .NET application.
 
 ## Getting Started
 
-You can install Reditus with NuGet:
+You can install [Reditus with NuGet](https://www.nuget.org/packages/Reditus):
 
 ```text
  Install-Package Reditus
