@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Reditus.Definitions;
 
 using System.Collections.Frozen;

@@ -4,22 +4,35 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Description>A Result pattern for C#.</Description>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <Authors>https://github.com/geocfu</Authors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageTags>reditus;result-pattern;pattern</PackageTags>
+        <PackageProjectUrl>https://github.com/geocfu/Reditus</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Reditus.Definitions.Abstractions\Reditus.Definitions.Abstractions.csproj" />
-      <ProjectReference Include="..\Reditus.Definitions\Reditus.Definitions.csproj" />
+        <ProjectReference Include="..\Reditus.Definitions.Abstractions\Reditus.Definitions.Abstractions.csproj"/>
+        <ProjectReference Include="..\Reditus.Definitions\Reditus.Definitions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="SonarAnalyzer.CSharp" Version="9.24.0.89429">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" Visible="false" PackagePath="/"/>
     </ItemGroup>
 
 </Project>
