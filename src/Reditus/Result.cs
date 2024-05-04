@@ -1,7 +1,6 @@
 namespace Reditus;
 
 using Definitions;
-using Definitions.Abstractions;
 
 /// <summary>
 /// Represents a Result object.
@@ -16,7 +15,7 @@ public sealed class Result
     /// <summary>
     /// The internal error, if any, of the Result.
     /// </summary>
-    private readonly IError? _error;
+    private readonly Abstractions.IError? _error;
 
     /// <summary>
     /// Gets a value indicating whether Result is successful.
@@ -31,7 +30,7 @@ public sealed class Result
     /// <summary>
     /// Gets the Error, if any, attached to the Result.
     /// </summary>
-    public IError? Error
+    public Abstractions.IError? Error
     {
         get
         {
@@ -61,7 +60,7 @@ public sealed class Result
     /// </summary>
     /// <param name="error">The error to attach to the Result.</param>
     /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
-    private Result(IError error)
+    private Result(Abstractions.IError error)
     {
         _state = State.Failed;
         Error = error;
@@ -78,7 +77,7 @@ public sealed class Result
     /// </summary>
     /// <param name="error">The error of the result.</param>
     /// <returns>A failed Result instance.</returns>
-    public static Result Failed(IError error) => new(error);
+    public static Result Failed(Abstractions.IError error) => new(error);
 }
 
 /// <summary>
@@ -100,7 +99,7 @@ public sealed class Result<T>
     /// <summary>
     /// The internal error, if any, of the Result.
     /// </summary>
-    private readonly IError? _error;
+    private readonly Abstractions.IError? _error;
 
     /// <summary>
     /// Gets a value indicating whether Result is successful.
@@ -145,7 +144,7 @@ public sealed class Result<T>
     /// <summary>
     /// Gets the Error, if any, attached to the Result.
     /// </summary>
-    public IError? Error
+    public Abstractions.IError? Error
     {
         get
         {
@@ -178,7 +177,7 @@ public sealed class Result<T>
     /// </summary>
     /// <param name="error">The error to attach to the Result.</param>
     /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
-    private Result(IError error)
+    private Result(Abstractions.IError error)
     {
         _state = State.Failed;
         Error = error;
@@ -196,7 +195,7 @@ public sealed class Result<T>
     /// </summary>
     /// <param name="error">The error of the result.</param>
     /// <returns>A failed Result instance.</returns>
-    public static Result<T> Failed(IError error) => new(error);
+    public static Result<T> Failed(Abstractions.IError error) => new(error);
 
     /// <summary>
     /// Creates a failed Result.

@@ -25,7 +25,12 @@ jobs:
             -   name: Pack
                 run: dotnet pack --no-build --no-restore --configuration Release
 
-            -   name: Publish the package to nuget.org
+            -   name: Publish *.nupkg to nuget.org
                 run: dotnet nuget push **/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+                env:
+                    NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
+
+            -   name: Publish *.snupkg to nuget.org
+                run: dotnet nuget push **/bin/Release/*.snupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
                 env:
                     NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}

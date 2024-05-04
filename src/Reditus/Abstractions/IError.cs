@@ -1,4 +1,4 @@
-namespace Reditus.Definitions.Abstractions;
+namespace Reditus.Abstractions;
 
 using System.Collections.Frozen;
 

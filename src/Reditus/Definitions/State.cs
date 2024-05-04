@@ -1,7 +1,7 @@
 namespace Reditus.Definitions;
 
 /// <summary>
-/// The state of a Result
+/// The state of a Result.
 /// </summary>
 public enum State : byte
 {

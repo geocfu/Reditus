@@ -1,5 +1,3 @@
-using Reditus.Definitions;
-
 namespace Reditus.Benchmarks.Cases;
 
 using BenchmarkDotNet.Attributes;
