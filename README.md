@@ -186,17 +186,17 @@ public async Task<Result<IEnumerable<Project>>> GetProjects()
         {
             var error = new NotFoundError(); // <-- the new NotFoundError Error class
 
-            return Result<int>.Failed(error);
+            return Result<IEnumerable<Project>>.Failed(error);
         }
 
-        return Result<int>.Successful(jobId);
+        return Result<IEnumerable<Project>>.Successful(jobId);
     }
     catch (Exception ex)
     {
         // create an Error and attach the exception
         var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        return Result<int>.Failed(error);
+        return Result<IEnumerable<Project>>.Failed(error);
     }
 }
 ```
