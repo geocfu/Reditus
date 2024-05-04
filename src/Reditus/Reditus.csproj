@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Description>A Result pattern for C#.</Description>
+        <Description>A Result pattern library for C#.</Description>
         <VersionPrefix>1.0.0</VersionPrefix>
         <Authors>https://github.com/geocfu</Authors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -18,11 +18,6 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Reditus.Definitions.Abstractions\Reditus.Definitions.Abstractions.csproj"/>
-        <ProjectReference Include="..\Reditus.Definitions\Reditus.Definitions.csproj"/>
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">

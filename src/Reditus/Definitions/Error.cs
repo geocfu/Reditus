@@ -1,12 +1,11 @@
 namespace Reditus.Definitions;
 
 using System.Collections.Frozen;
-using Abstractions;
 
 /// <summary>
 /// A general Error object.
 /// </summary>
-public class Error : IError
+public class Error : Reditus.Abstractions.IError
 {
     /// <inheritdoc />
     public string Message { get; }
