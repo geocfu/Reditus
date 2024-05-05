@@ -1,6 +1,6 @@
 # Reditus
 
-![NuGet Version](https://img.shields.io/nuget/v/Reditus)
+![NuGet Version](https://img.shields.io/nuget/v/Reditus?logo=nuget)
 
 Reditus, is a Result pattern library for every .NET application.
 
