@@ -1,24 +1,26 @@
-namespace Reditus.Abstractions;
+using System;
+using System.Collections.Generic;
 
-using System.Collections.Frozen;
-
-/// <summary>
-/// Describes an Error object.
-/// </summary>
-public interface IError
+namespace Reditus.Abstractions
 {
     /// <summary>
-    /// Gets the message that describes the Error.
+    /// Describes an Error object.
     /// </summary>
-    public string Message { get; }
+    public interface IError
+    {
+        /// <summary>
+        /// Gets the message that describes the Error.
+        /// </summary>
+        string Message { get; }
 
-    /// <summary>
-    /// Gets the exception, if any, that was attached to the Error.
-    /// </summary>
-    public Exception? Exception { get; }
+        /// <summary>
+        /// Gets the exception, if any, that was attached to the Error.
+        /// </summary>
+        Exception Exception { get; }
 
-    /// <summary>
-    /// Gets the metadata, if any, that was attached to the Error.
-    /// </summary>
-    public FrozenDictionary<string, object> Metadata { get; }
+        /// <summary>
+        /// Gets the metadata, if any, that was attached to the Error.
+        /// </summary>
+        IReadOnlyDictionary<string, object> Metadata { get; }
+    }
 }

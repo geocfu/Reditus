@@ -1,17 +1,18 @@
-namespace Reditus.Definitions;
-
-/// <summary>
-/// The state of a Result.
-/// </summary>
-public enum State : byte
+namespace Reditus.Definitions
 {
     /// <summary>
-    /// If the Result is successful.
+    /// The state of a Result.
     /// </summary>
-    Successful = 1,
+    public enum State : byte
+    {
+        /// <summary>
+        /// If the Result is successful.
+        /// </summary>
+        Successful = 1,
 
-    /// <summary>
-    /// If the Result is failed.
-    /// </summary>
-    Failed = 2,
+        /// <summary>
+        /// If the Result is failed.
+        /// </summary>
+        Failed = 2,
+    }
 }
