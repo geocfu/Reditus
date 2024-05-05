@@ -1,6 +1,6 @@
-namespace Reditus.UnitTests;
+using Reditus.Definitions;
 
-using Definitions;
+namespace Reditus.UnitTests;
 
 public class ResultTest
 {
@@ -29,7 +29,6 @@ public class ResultTest
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
             Assert.Equal("This is an error.", result.Error.Message);
-            Assert.Empty(result.Error.Metadata);
             Assert.Null(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -49,54 +48,6 @@ public class ResultTest
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
             Assert.Equal("This is an error.", result.Error.Message);
-            Assert.Empty(result.Error.Metadata);
-            Assert.NotNull(result.Error.Exception);
-            Assert.False(result.IsSuccessful);
-            Assert.True(result.IsFailed);
-        });
-    }
-
-    [Fact]
-    public void Creating_Failed_Result_With_Metadata_Should_Succeed()
-    {
-        var metadata = new Dictionary<string, object>()
-        {
-            { "key", "value" }
-        };
-        var error = new Error("This is an error.", metadata);
-
-        var result = Result.Failed(error);
-
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(result);
-            Assert.NotNull(result.Error);
-            Assert.Equal("This is an error.", result.Error.Message);
-            Assert.NotEmpty(result.Error.Metadata);
-            Assert.Null(result.Error.Exception);
-            Assert.False(result.IsSuccessful);
-            Assert.True(result.IsFailed);
-        });
-    }
-
-    [Fact]
-    public void Creating_Failed_Result_With_Exception_With_Metadata_Should_Succeed()
-    {
-        var exception = new Exception();
-        var metadata = new Dictionary<string, object>()
-        {
-            { "key", "value" }
-        };
-        var error = new Error("This is an error.", exception, metadata);
-
-        var result = Result.Failed(error);
-
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(result);
-            Assert.NotNull(result.Error);
-            Assert.Equal("This is an error.", result.Error.Message);
-            Assert.NotEmpty(result.Error.Metadata);
             Assert.NotNull(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -143,7 +94,6 @@ public class ResultTest
             Assert.NotNull(result.Error);
             Assert.Throws<InvalidOperationException>(() => result.Value);
             Assert.Equal("This is an error.", result.Error.Message);
-            Assert.Empty(result.Error.Metadata);
             Assert.Null(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -161,7 +111,6 @@ public class ResultTest
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
             Assert.Equal("This is an error.", result.Error.Message);
-            Assert.Empty(result.Error.Metadata);
             Assert.Null(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -181,54 +130,6 @@ public class ResultTest
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
             Assert.Equal("This is an error.", result.Error.Message);
-            Assert.Empty(result.Error.Metadata);
-            Assert.NotNull(result.Error.Exception);
-            Assert.False(result.IsSuccessful);
-            Assert.True(result.IsFailed);
-        });
-    }
-
-    [Fact]
-    public void Creating_Failed_Result_Of_T_With_Metadata_Should_Succeed()
-    {
-        var metadata = new Dictionary<string, object>()
-        {
-            { "key", "value" }
-        };
-        var error = new Error("This is an error.", metadata);
-
-        var result = Result<object>.Failed(error);
-
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(result);
-            Assert.NotNull(result.Error);
-            Assert.Equal("This is an error.", result.Error.Message);
-            Assert.NotEmpty(result.Error.Metadata);
-            Assert.Null(result.Error.Exception);
-            Assert.False(result.IsSuccessful);
-            Assert.True(result.IsFailed);
-        });
-    }
-
-    [Fact]
-    public void Creating_Failed_Result_Of_T_With_Exception_With_Metadata_Should_Succeed()
-    {
-        var exception = new Exception();
-        var metadata = new Dictionary<string, object>()
-        {
-            { "key", "value" }
-        };
-        var error = new Error("This is an error.", exception, metadata);
-
-        var result = Result<object>.Failed(error);
-
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(result);
-            Assert.NotNull(result.Error);
-            Assert.Equal("This is an error.", result.Error.Message);
-            Assert.NotEmpty(result.Error.Metadata);
             Assert.NotNull(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -252,7 +153,6 @@ public class ResultTest
             Assert.NotNull(resultOfTy);
             Assert.NotNull(resultOfTy.Error);
             Assert.Equal("This is an error.", resultOfTy.Error.Message);
-            Assert.Empty(resultOfTy.Error.Metadata);
             Assert.Null(resultOfTy.Error.Exception);
             Assert.False(resultOfTy.IsSuccessful);
             Assert.True(resultOfTy.IsFailed);

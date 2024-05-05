@@ -1,6 +1,6 @@
-namespace Reditus.Benchmarks.Cases;
-
 using BenchmarkDotNet.Attributes;
+
+namespace Reditus.Benchmarks.Cases;
 
 [MemoryDiagnoser]
 public class ResultCase
