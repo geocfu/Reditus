@@ -10,6 +10,7 @@ jobs:
 
         steps:
             -   uses: actions/checkout@v4
+                run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
             -   name: Setup .NET
                 uses: actions/setup-dotnet@v4
@@ -26,11 +27,11 @@ jobs:
                 run: dotnet pack --no-build --no-restore --configuration Release
 
             -   name: Publish *.nupkg to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.[0-9]+.[0-9]+.[0-9]+.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+                run: dotnet nuget push **/bin/Release/Reditus.$RELEASE_VERSION.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
                 env:
                     NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
 
             -   name: Publish *.snupkg to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.[0-9]+.[0-9]+.[0-9]+.snupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+                run: dotnet nuget push **/bin/Release/Reditus.$RELEASE_VERSION.snupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
                 env:
                     NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
