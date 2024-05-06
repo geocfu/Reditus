@@ -77,13 +77,13 @@ namespace Reditus
         /// Creates a successful Result.
         /// </summary>
         /// <returns>A successful Result instance.</returns>
-        public static Result Successful() => new Result();
+        public static Result Success() => new Result();
 
         /// <summary>
         /// Creates a failed Result.
         /// </summary>
         /// <param name="error">The error of the result.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result Failed(IError error) => new Result(error);
+        public static Result Fail(IError error) => new Result(error);
     }
 }
