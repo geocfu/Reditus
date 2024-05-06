@@ -1,5 +1,8 @@
 # Reditus
 
+[![NuGet Version](https://img.shields.io/nuget/v/Reditus)](https://www.nuget.org/packages/Reditus)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Reditus)](https://www.nuget.org/packages/Reditus)
+
 Reditus, is a Result pattern library for every .NET application.
 
 ## Getting Started
@@ -215,4 +218,3 @@ public sealed class ApplicationError : Error
 
 The `Error` class provides 3 constructors, so you are free to use whichever suits your needs
 best. [See definition](src/Reditus.Definitions/Error.cs)
-
