@@ -1,8 +1,11 @@
 name: publish_nuget.yml
 on:
-    workflow_dispatch: # used to triger the job by hand
     push:
         tags: [ "v*" ]
+
+env:
+    PACKAGE_VERSION_FROM_TAG: ${{ GITHUB_REF_NAME }}
+    NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
 
 jobs:
     publish:
@@ -25,12 +28,5 @@ jobs:
             -   name: Pack
                 run: dotnet pack --no-build --no-restore --configuration Release
 
-            -   name: Publish *.nupkg to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.${GITHUB_REF_NAME#v}.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
-                env:
-                    NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
-
-            -   name: Publish *.snupkg to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.${GITHUB_REF_NAME#v}.snupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
-                env:
-                    NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
+            -   name: Publish to nuget.org
+                run: dotnet nuget push **/bin/Release/Reditus.${PACKAGE_VERSION_FROM_TAG#v}.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
