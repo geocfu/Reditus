@@ -26,11 +26,11 @@ jobs:
                 run: dotnet pack --no-build --no-restore --configuration Release
 
             -   name: Publish *.nupkg to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.v$GITHUB_REF_NAME.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+                run: dotnet nuget push **/bin/Release/Reditus.${GITHUB_REF_NAME#v}.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
                 env:
                     NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
 
             -   name: Publish *.snupkg to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.v$GITHUB_REF_NAME.snupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+                run: dotnet nuget push **/bin/Release/Reditus.${GITHUB_REF_NAME#v}.snupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
                 env:
                     NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
