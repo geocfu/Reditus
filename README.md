@@ -118,37 +118,37 @@ public async Task<Result<int>> ExecuteJob()
 A `Result` holds certain information about itself.
 
 ```csharp
-var sucessfulResult = Result.Successful();
+var result = Result.Successful();
 
-sucessfulResult.IsSuccessful // true
-sucessfulResult.IsFailed // false
-sucessfulResult.Error // throws InvalidOperationException as the result is not in a failed state
+result.IsSuccessful // true
+result.IsFailed // false
+result.Error // throws InvalidOperationException as the result is not in a failed state
 
 
-var failedResult = Result.Failed(new Error("Operation failed.");
+var result = Result.Failed(new Error("Operation failed.");
 
-failedResult.IsSuccessful // false
-failedResult.IsFailed // true
-failedResult.Error // IError instance
+result.IsSuccessful // false
+result.IsFailed // true
+result.Error // IError instance
 ```
 
 When the `Result<T>` holds a return value.
 
 ```csharp
-var sucessfulResult = Result<int>.Successful(1);
+var result = Result<int>.Successful(1);
 
-sucessfulResult.IsSuccessful // true
-sucessfulResult.IsFailed // false
-sucessfulResult.Value // 1
-sucessfulResult.Error // throws InvalidOperationException as the result is not in a fail state
+result.IsSuccessful // true
+result.IsFailed // false
+result.Value // 1
+result.Error // throws InvalidOperationException as the result is not in a fail state
 
 
-var failedResult = Result<int>.Failed(new Error("Operation failed.");
+var result = Result<int>.Failed(new Error("Operation failed.");
 
-failedResult.IsSuccessful // false
-failedResult.IsFailed // true
-failedResult.Value // throws InvalidOperationException as the result is not in a success state
-failedResult.Error // IError instance
+result.IsSuccessful // false
+result.IsFailed // true
+result.Value // throws InvalidOperationException as the result is not in a success state
+result.Error // IError instance
 ```
 
 ### Extending
