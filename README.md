@@ -118,14 +118,14 @@ public async Task<Result<int>> ExecuteJob()
 A `Result` holds certain information about itself.
 
 ```csharp
-var result = Result.Successful();
+var result = Result.Success();
 
 result.IsSuccessful // true
 result.IsFailed // false
 result.Error // throws InvalidOperationException as the result is not in a failed state
 
 
-var result = Result.Failed(new Error("Operation failed.");
+var result = Result.Fail(new Error("Operation failed.");
 
 result.IsSuccessful // false
 result.IsFailed // true
@@ -135,7 +135,7 @@ result.Error // IError instance
 When the `Result<T>` holds a return value.
 
 ```csharp
-var result = Result<int>.Successful(1);
+var result = Result<int>.Success(1);
 
 result.IsSuccessful // true
 result.IsFailed // false
@@ -143,7 +143,7 @@ result.Value // 1
 result.Error // throws InvalidOperationException as the result is not in a fail state
 
 
-var result = Result<int>.Failed(new Error("Operation failed.");
+var result = Result<int>.Fail(new Error("Operation failed.");
 
 result.IsSuccessful // false
 result.IsFailed // true
