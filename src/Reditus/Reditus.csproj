@@ -15,6 +15,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <AnalysisMode>All</AnalysisMode>
     </PropertyGroup>
 
     <ItemGroup>
