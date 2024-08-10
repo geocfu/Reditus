@@ -59,7 +59,7 @@ namespace Reditus.Factories
         /// <returns>A failed Result instance.</returns>
         public static Core.Result<T> CreateFail(Exception exception)
         {
-            var failure = new Failure("A failure has occured.", exception);
+            var failure = new Failure(exception);
             return new Core.Result<T>(failure);
         }
 

@@ -64,13 +64,3 @@ resharper_web_config_wrong_module_highlighting = warning
 indent_style = space
 indent_size = 4
 tab_width = 4
-
-# StyleCop.Analyzers Rule overrides
-
-## StyleCop.CSharp.ReadabilityRules
-dotnet_diagnostic.SA1000.severity = none
-dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1309.severity = none
-dotnet_diagnostic.SA1201.severity = none
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SA1200.severity = none
