@@ -1,20 +1,19 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Reditus.Core;
 using Reditus.Extensions.AspNetCore.Abstractions;
 
 namespace Reditus.Extensions.AspNetCore.Core;
 
 public static class ConvertHttpResultToActionResult
 {
-    public static ActionResult<T> ToActionResult<T>(this Result<T> result)
+    public static ActionResult<T> ToActionResult<T>(this Result result)
     {
         ArgumentNullException.ThrowIfNull(result);
 
         if (result.IsSuccessful)
         {
-            if (result.Success is IAspNetCoreSuccess<T> aspNetCoreSuccess)
+            if (result.Success is IHttpSuccess<T> aspNetCoreSuccess)
             {
                 return new ObjectResult(aspNetCoreSuccess.Value)
                 {

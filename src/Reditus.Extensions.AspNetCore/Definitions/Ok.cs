@@ -5,7 +5,7 @@ using Reditus.Extensions.AspNetCore.Abstractions;
 
 namespace Reditus.Extensions.AspNetCore.Definitions;
 
-public class Ok<T> : Success<T>, IAspNetCoreSuccess<T>
+public class Ok<T> : Success<T>, IHttpSuccess<T>
 {
     public HttpStatusCode HttpStatusCode => HttpStatusCode.OK;
 

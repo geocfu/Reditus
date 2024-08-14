@@ -3,7 +3,7 @@ using Reditus.Abstractions;
 
 namespace Reditus.Extensions.AspNetCore.Abstractions;
 
-public interface IAspNetCoreSuccess<T> : ISuccess<T>
+public interface IHttpSuccess<out T> : ISuccess<T>
 {
     /// <summary>
     ///

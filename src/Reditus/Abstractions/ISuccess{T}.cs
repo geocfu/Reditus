@@ -4,7 +4,7 @@ namespace Reditus.Abstractions
     /// Describes a Success object.
     /// </summary>
     /// <typeparam name="T">The type containing by this.</typeparam>
-    public interface ISuccess<T>
+    public interface ISuccess<out T>
     {
         /// <summary>
         /// Gets the success of the Success Result.

@@ -4,7 +4,7 @@ using Reditus.Extensions.AspNetCore.Abstractions;
 
 namespace Reditus.Extensions.AspNetCore.Definitions;
 
-public class Created<T> : Success<T>, IAspNetCoreSuccess<T>
+public class Created<T> : Success<T>, IHttpSuccess<T>
 {
     public HttpStatusCode HttpStatusCode => HttpStatusCode.Created;
 

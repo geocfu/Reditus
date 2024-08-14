@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Reditus.Core;
 using Reditus.Extensions.AspNetCore.Definitions;
 
-namespace Reditus.Extensions.AspNetCore.Factories;
+namespace Reditus.Extensions.AspNetCore;
 
 /// <summary>
 ///

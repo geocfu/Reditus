@@ -21,7 +21,7 @@ namespace Reditus.Definitions
         {
             if (value == null)
             {
-                throw new ArgumentException("The Success property must have a success.", nameof(value));
+                throw new ArgumentException("The Value property must have a value.", nameof(value));
             }
 
             Value = value;

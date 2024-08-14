@@ -30,7 +30,7 @@ namespace Reditus.Definitions
         {
             if (string.IsNullOrEmpty(message))
             {
-                throw new ArgumentException("The Message property must have a success.", nameof(message));
+                throw new ArgumentException("The Message property must have a value.", nameof(message));
             }
 
             Message = message;
