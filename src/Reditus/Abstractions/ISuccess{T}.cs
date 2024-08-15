@@ -1,13 +1,13 @@
 namespace Reditus.Abstractions
 {
     /// <summary>
-    /// Describes a Success object.
+    /// Describes a Success{T} object.
     /// </summary>
-    /// <typeparam name="T">The type containing by this.</typeparam>
-    public interface ISuccess<out T>
+    /// <typeparam name="T">The type contained in <see cref="T:Success{T}" />.</typeparam>
+    public interface ISuccess<out T> : ISuccess
     {
         /// <summary>
-        /// Gets the success of the Success Result.
+        /// Gets the Value of the Success Result.
         /// </summary>
         T Value { get; }
     }

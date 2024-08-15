@@ -18,7 +18,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Reditus.Extensions.AspNetCore\Reditus.Extensions.AspNetCore.csproj" />
+      <ProjectReference Include="..\..\src\Reditus.Extensions.AspNetCore.Http\Reditus.Extensions.AspNetCore.Http.csproj" />
     </ItemGroup>
 
 </Project>

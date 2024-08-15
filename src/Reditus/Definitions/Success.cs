@@ -3,7 +3,7 @@ using Reditus.Abstractions;
 namespace Reditus.Definitions
 {
     /// <summary>
-    /// A general Success object.
+    /// Represents a Success object.
     /// </summary>
     public class Success : ISuccess
     {

@@ -12,11 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Benchmarks", "benchmarks\Reditus.Benchmarks\Reditus.Benchmarks.csproj", "{464FBD45-EB90-45DE-998E-B28D26F2917E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Extensions.AspNetCore", "src\Reditus.Extensions.AspNetCore\Reditus.Extensions.AspNetCore.csproj", "{ACB87C0E-1AC2-4528-8AEF-D3978F215BB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Extensions.AspNetCore.Http", "src\Reditus.Extensions.AspNetCore.Http\Reditus.Extensions.AspNetCore.Http.csproj", "{ACB87C0E-1AC2-4528-8AEF-D3978F215BB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reditus.Extensions", "Reditus.Extensions", "{E4404248-C85B-4224-84B4-7D76494BC7CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Extensions.AspNetCore.UnitTests", "tests\Reditus.Extensions.AspNetCore.UnitTests\Reditus.Extensions.AspNetCore.UnitTests.csproj", "{8C5A16CC-CA2E-4944-9005-4C6C35605A87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reditus.Extensions.AspNetCore.Http.UnitTests", "tests\Reditus.Extensions.AspNetCore.Http.UnitTests\Reditus.Extensions.AspNetCore.Http.UnitTests.csproj", "{8C5A16CC-CA2E-4944-9005-4C6C35605A87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

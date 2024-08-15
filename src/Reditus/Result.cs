@@ -7,7 +7,7 @@ namespace Reditus
     /// <summary>
     /// Represents a Result object.
     /// </summary>
-    public sealed class Result
+    public class Result : IResult
     {
         /// <summary>
         /// The internal state of the Result.
@@ -24,11 +24,7 @@ namespace Reditus
         /// </summary>
         private readonly ISuccess _success;
 
-        /// <summary>
-        /// Gets the Success, if any, attached to the Result.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when Result is Failed.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when Result is Successful.</exception>
+        /// <inheritdoc />
         public ISuccess Success
         {
             get
@@ -43,9 +39,7 @@ namespace Reditus
             }
         }
 
-        /// <summary>
-        /// Gets the Failure, if any, attached to the Result.
-        /// </summary>
+        /// <inheritdoc />
         public IFailure Failure
         {
             get
@@ -64,7 +58,8 @@ namespace Reditus
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
         /// <param name="success">The success object.</param>
-        public Result(ISuccess success)
+        /// <exception cref="ArgumentNullException">Thrown if message is null or empty.</exception>
+        protected Result(ISuccess success)
         {
             _state = State.Successful;
 
@@ -83,7 +78,7 @@ namespace Reditus
         /// </summary>
         /// <param name="failure">The failure to attach to the Result.</param>
         /// <exception cref="ArgumentNullException">Thrown when failure is null.</exception>
-        public Result(IFailure failure)
+        protected Result(IFailure failure)
         {
             _state = State.Failed;
 
@@ -97,17 +92,11 @@ namespace Reditus
             _failure = failure;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether a Result is successful.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsSuccessful => _state == State.Successful;
 
-        /// <summary>
-        /// Gets a value indicating whether a Result is failed.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsFailed => _state == State.Failed;
-
-        //-------------------------------
 
         /// <summary>
         /// Creates a successful Result.
@@ -116,7 +105,7 @@ namespace Reditus
         public static Result CreateSuccess()
         {
             var success = new Success();
-            return new Result(success);
+            return CreateSuccess(success);
         }
 
         /// <summary>
@@ -130,47 +119,33 @@ namespace Reditus
         }
 
         /// <summary>
+        /// Creates a successful Result from a different successful Result.
+        /// </summary>
+        /// <param name="result">The Result to copy from.</param>
+        /// <returns>A failed Result instance.</returns>
+        public static Result CreateSuccess(Result result)
+        {
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result), "Cannot convert null into a Result");
+            }
+
+            if (result.IsFailed)
+            {
+                throw new InvalidOperationException("Converting a Failed Result to a Successful Result is invalid.");
+            }
+
+            return CreateSuccess(result.Success);
+        }
+
+        /// <summary>
         /// Creates a failed Result.
         /// </summary>
         /// <returns>A failed Result instance.</returns>
         public static Result CreateFail()
         {
             var failure = new Failure();
-            return new Result(failure);
-        }
-
-        /// <summary>
-        /// Creates a failed Result.
-        /// </summary>
-        /// <param name="failureMessage">The failure message of the result.</param>
-        /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail(string failureMessage)
-        {
-            var failure = new Failure(failureMessage);
-            return new Result(failure);
-        }
-
-        /// <summary>
-        /// Creates a failed Result.
-        /// </summary>
-        /// <param name="exception">The failure exception of the result.</param>
-        /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail(Exception exception)
-        {
-            var failure = new Failure(exception);
-            return new Result(failure);
-        }
-
-        /// <summary>
-        /// Creates a failed Result.
-        /// </summary>
-        /// <param name="failureMessage">The failure message of the result.</param>
-        /// <param name="exception">The failure exception of the result.</param>
-        /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail(string failureMessage, Exception exception)
-        {
-            var failure = new Failure(failureMessage, exception);
-            return new Result(failure);
+            return CreateFail(failure);
         }
 
         /// <summary>
@@ -181,6 +156,26 @@ namespace Reditus
         public static Result CreateFail(IFailure failure)
         {
             return new Result(failure);
+        }
+
+        /// <summary>
+        /// Creates a failed Result from a different failed Result.
+        /// </summary>
+        /// <param name="result">The Result to copy from.</param>
+        /// <returns>A failed Result instance.</returns>
+        public static Result CreateFail(Result result)
+        {
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result), "Cannot convert null into a Result");
+            }
+
+            if (result.IsSuccessful)
+            {
+                throw new InvalidOperationException("Converting a Successful Result to a Failed Result is invalid.");
+            }
+
+            return CreateFail(result.Failure);
         }
     }
 }

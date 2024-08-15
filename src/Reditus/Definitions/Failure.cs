@@ -4,7 +4,7 @@ using Reditus.Abstractions;
 namespace Reditus.Definitions
 {
     /// <summary>
-    /// A general Failure object.
+    /// Represents a Failure object.
     /// </summary>
     public class Failure : IFailure
     {

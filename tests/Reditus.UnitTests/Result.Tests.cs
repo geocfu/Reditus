@@ -43,6 +43,7 @@ public class ResultTests
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Failure);
+            Assert.Throws<InvalidOperationException>(() => result.Success);
             Assert.Null(result.Failure.Message);
             Assert.Null(result.Failure.Exception);
             Assert.False(result.IsSuccessful);
@@ -53,13 +54,15 @@ public class ResultTests
     [Fact]
     public void Creating_Failed_Result_With_Reason_Should_Succeed()
     {
-        var reason = "Failure reason.";
-        var result = Result.CreateFail(reason);
+        const string reason = "Failure reason.";
+        var failure = new Failure(reason);
+        var result = Result.CreateFail(failure);
 
         Assert.Multiple(() =>
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Failure);
+            Assert.Throws<InvalidOperationException>(() => result.Success);
             Assert.Equal("Failure reason.", result.Failure.Message);
             Assert.Null(result.Failure.Exception);
             Assert.False(result.IsSuccessful);
@@ -71,12 +74,14 @@ public class ResultTests
     public void Creating_Failed_Result_With_Exception_Should_Succeed()
     {
         var exception = new Exception();
-        var result = Result.CreateFail(exception);
+        var failure = new Failure(exception);
+        var result = Result.CreateFail(failure);
 
         Assert.Multiple(() =>
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Failure);
+            Assert.Throws<InvalidOperationException>(() => result.Success);
             Assert.Null(result.Failure.Message);
             Assert.NotNull(result.Failure.Exception);
             Assert.False(result.IsSuccessful);
@@ -87,14 +92,16 @@ public class ResultTests
     [Fact]
     public void Creating_Failed_Result_With_Reason_And_Exception_Should_Succeed()
     {
-        var reason = "Failure reason.";
+        const string reason = "Failure reason.";
         var exception = new Exception();
-        var result = Result.CreateFail(reason, exception);
+        var failure = new Failure(reason, exception);
+        var result = Result.CreateFail(failure);
 
         Assert.Multiple(() =>
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Failure);
+            Assert.Throws<InvalidOperationException>(() => result.Success);
             Assert.Equal("Failure reason.", result.Failure.Message);
             Assert.NotNull(result.Failure.Exception);
             Assert.False(result.IsSuccessful);
@@ -112,6 +119,7 @@ public class ResultTests
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Failure);
+            Assert.Throws<InvalidOperationException>(() => result.Success);
             Assert.Null(result.Failure.Message);
             Assert.Null(result.Failure.Exception);
             Assert.False(result.IsSuccessful);
@@ -124,5 +132,52 @@ public class ResultTests
     {
         Failure failure = null!;
         Assert.Throws<ArgumentNullException>(() => Result.CreateFail(failure));
+    }
+
+    [Fact]
+    public void Creating_Failed_Result_From_A_Different_Failed_Result_Should_Succeed()
+    {
+        var oldResult = Result.CreateFail();
+        var newResult = Result.CreateFail(oldResult);
+
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(newResult);
+            Assert.NotNull(newResult.Failure);
+            Assert.Throws<InvalidOperationException>(() => newResult.Success);
+            Assert.Null(newResult.Failure.Message);
+            Assert.Null(newResult.Failure.Exception);
+            Assert.False(newResult.IsSuccessful);
+            Assert.True(newResult.IsFailed);
+        });
+    }
+
+    [Fact]
+    public void Creating_Failed_Result_From_Null_Result_Should_Fail()
+    {
+        Result oldResult = null!;
+        Assert.Throws<ArgumentNullException>(() => Result.CreateFail(oldResult));
+    }
+
+    [Fact]
+    public void Creating_Successful_Result_From_A_Different_Successful_Result_Should_Succeed()
+    {
+        var oldResult = Result.CreateSuccess();
+        var newResult = Result.CreateSuccess(oldResult);
+
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(newResult);
+            Assert.Throws<InvalidOperationException>(() => newResult.Failure);
+            Assert.True(newResult.IsSuccessful);
+            Assert.False(newResult.IsFailed);
+        });
+    }
+    
+    [Fact]
+    public void Creating_Successful_Result_From_Null_Result_Should_Fail()
+    {
+        Result oldResult = null!;
+        Assert.Throws<ArgumentNullException>(() => Result.CreateSuccess(oldResult));
     }
 }

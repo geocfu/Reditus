@@ -4,9 +4,9 @@ using Reditus.Abstractions;
 namespace Reditus.Definitions
 {
     /// <summary>
-    /// A general Success object.
+    /// Represents a Success{T} object.
     /// </summary>
-    /// <typeparam name="T">The type of the Success object.</typeparam>
+    /// <typeparam name="T">The type contained in <see cref="T:Success{T}" />.</typeparam>
     public class Success<T> : ISuccess<T>
     {
         /// <inheritdoc />
@@ -16,12 +16,12 @@ namespace Reditus.Definitions
         /// Initializes a new instance of the <see cref="Success{T}"/> class.
         /// </summary>
         /// <param name="value">The message that describes the Failure.</param>
-        /// <exception cref="ArgumentException">Thrown if message is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if value is null.</exception>
         public Success(T value)
         {
             if (value == null)
             {
-                throw new ArgumentException("The Value property must have a value.", nameof(value));
+                throw new ArgumentNullException(nameof(value), "The Value property must have a value.");
             }
 
             Value = value;
