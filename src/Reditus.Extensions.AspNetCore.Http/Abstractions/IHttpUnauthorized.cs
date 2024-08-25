@@ -7,7 +7,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// This interface extends <see cref="IHttpFailure"/> to specify that the failure corresponds to an HTTP 401 status code.
 /// It is used to indicate that the request has not been applied because it lacks valid authentication credentials.
 /// </summary>
-public interface IUnauthorized : IHttpFailure
+public interface IHttpUnauthorized : IHttpFailure
 {
     /// <summary>
     /// Creates an instance of <see cref="HttpResult"/> representing a general failure.

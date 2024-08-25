@@ -6,11 +6,11 @@
 /// It is used to indicate that the request was successful and that a response body with a value is being returned.
 /// </summary>
 /// <typeparam name="T">The type of the value included in the response.</typeparam>
-public interface IOk<T> : IHttpSuccess<T>
+public interface IHttpOk<T> : IHttpSuccess<T>
 {
     /// <summary>
     /// Creates a successful <see cref="HttpResult{T}"/> for an HTTP 200 OK response.
-    /// This method allows for the creation of a success result that includes a value of type <typeparamref name="T"/> 
+    /// This method allows for the creation of a success result that includes a value of type <typeparamref name="T"/>
     /// and corresponds to the HTTP 200 status code.
     /// Typically used when a request is successfully processed and a response with a body is returned to the client.
     /// </summary>

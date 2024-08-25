@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-<!--        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
-<!--        <Description>A Result pattern library for .NET.</Description>-->
-<!--        <VersionPrefix>2.0.0</VersionPrefix>-->
-<!--        <Authors>https://github.com/geocfu</Authors>-->
-<!--        <GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Description>An extension of Result pattern library for .NET. for Http</Description>
+        <VersionPrefix>3.0.0</VersionPrefix>
+        <Authors>https://github.com/geocfu</Authors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 <!--        <PackageTags>reditus;result-pattern;pattern</PackageTags>-->
 <!--        <PackageProjectUrl>https://github.com/geocfu/Reditus</PackageProjectUrl>-->
 <!--        <PackageLicenseExpression>MIT</PackageLicenseExpression>-->
@@ -26,11 +26,11 @@
         <ProjectReference Include="..\Reditus\Reditus.csproj"/>
     </ItemGroup>
 
-<!--    <ItemGroup>-->
-<!--      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">-->
-<!--        <PrivateAssets>all</PrivateAssets>-->
-<!--        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
-<!--      </PackageReference>-->
-<!--    </ItemGroup>-->
+    <ItemGroup>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>

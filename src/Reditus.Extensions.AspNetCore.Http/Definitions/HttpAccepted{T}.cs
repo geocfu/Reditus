@@ -14,7 +14,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Definitions;
 public class HttpAccepted<T> : Success<T>, IHttpAccepted<T>
 {
     /// <inheritdoc />
-    public HttpStatusCode StatusCode => HttpStatusCode.OK;
+    public HttpStatusCode StatusCode => HttpStatusCode.Accepted;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpAccepted{T}"/> class with the specified data payload.

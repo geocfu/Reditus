@@ -25,7 +25,7 @@ public class HttpBadRequest : Failure, IHttpBadRequest
     public HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
 
     /// <summary>
-    /// A read-only dictionary that holds validation errors.
+    /// Gets a read-only dictionary that holds validation errors.
     /// The keys represent the names of the invalid fields or parameters,
     /// and the values are arrays of corresponding error messages.
     /// </summary>
@@ -85,8 +85,8 @@ public class HttpBadRequest : Failure, IHttpBadRequest
             .GroupBy(x => x.Key)
             .ToDictionary(
                 g => g.Key,
-                g => g.Select(x => x.Value).ToArray()
-            ).AsReadOnly();
+                g => g.Select(x => x.Value).ToArray())
+            .AsReadOnly();
     }
 
     /// <summary>
@@ -102,8 +102,8 @@ public class HttpBadRequest : Failure, IHttpBadRequest
             .GroupBy(x => x.Key)
             .ToDictionary(
                 g => g.Key,
-                g => g.Select(x => x.Value).ToArray()
-            ).AsReadOnly();
+                g => g.Select(x => x.Value).ToArray())
+            .AsReadOnly();
     }
 
     /// <summary>
@@ -119,8 +119,8 @@ public class HttpBadRequest : Failure, IHttpBadRequest
             .GroupBy(x => x.Key)
             .ToDictionary(
                 g => g.Key,
-                g => g.Select(x => x.Value).ToArray()
-            ).AsReadOnly();
+                g => g.Select(x => x.Value).ToArray())
+            .AsReadOnly();
     }
 
     /// <summary>
@@ -130,7 +130,9 @@ public class HttpBadRequest : Failure, IHttpBadRequest
     /// <param name="message">The error message.</param>
     /// <param name="exception">The exception that caused the failure.</param>
     /// <param name="validationErrors">A collection of key-value pairs representing field names and their errors.</param>
-    public HttpBadRequest(string message, Exception exception,
+    public HttpBadRequest(
+        string message,
+        Exception exception,
         IEnumerable<KeyValuePair<string, string>> validationErrors)
         : base(message, exception)
     {
@@ -138,8 +140,8 @@ public class HttpBadRequest : Failure, IHttpBadRequest
             .GroupBy(x => x.Key)
             .ToDictionary(
                 g => g.Key,
-                g => g.Select(x => x.Value).ToArray()
-            ).AsReadOnly();
+                g => g.Select(x => x.Value).ToArray())
+            .AsReadOnly();
     }
 
     /// <inheritdoc />
@@ -164,7 +166,9 @@ public class HttpBadRequest : Failure, IHttpBadRequest
     }
 
     /// <inheritdoc />
-    public static HttpResult CreateHttpResult(string message, Exception exception,
+    public static HttpResult CreateHttpResult(
+        string message,
+        Exception exception,
         IDictionary<string, string[]> validationErrors)
     {
         var badRequest = new HttpBadRequest(message, exception, validationErrors);
@@ -179,7 +183,8 @@ public class HttpBadRequest : Failure, IHttpBadRequest
     }
 
     /// <inheritdoc />
-    public static HttpResult CreateHttpResult(string message,
+    public static HttpResult CreateHttpResult(
+        string message,
         IEnumerable<KeyValuePair<string, string>> validationErrors)
     {
         var badRequest = new HttpBadRequest(message, validationErrors);
@@ -187,7 +192,8 @@ public class HttpBadRequest : Failure, IHttpBadRequest
     }
 
     /// <inheritdoc />
-    public static HttpResult CreateHttpResult(Exception exception,
+    public static HttpResult CreateHttpResult(
+        Exception exception,
         IEnumerable<KeyValuePair<string, string>> validationErrors)
     {
         var badRequest = new HttpBadRequest(exception, validationErrors);
@@ -195,7 +201,9 @@ public class HttpBadRequest : Failure, IHttpBadRequest
     }
 
     /// <inheritdoc />
-    public static HttpResult CreateHttpResult(string message, Exception exception,
+    public static HttpResult CreateHttpResult(
+        string message,
+        Exception exception,
         IEnumerable<KeyValuePair<string, string>> validationErrors)
     {
         var badRequest = new HttpBadRequest(message, exception, validationErrors);

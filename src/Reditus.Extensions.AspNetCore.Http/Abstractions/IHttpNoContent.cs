@@ -5,7 +5,7 @@
 /// This interface extends <see cref="IHttpSuccess"/> to specify that the success corresponds to an HTTP 204 status code.
 /// It is used to indicate that the request was successfully processed, but there is no content to return.
 /// </summary>
-public interface INoContent : IHttpSuccess
+public interface IHttpNoContent : IHttpSuccess
 {
     /// <summary>
     /// Creates a successful <see cref="HttpResult"/> for an HTTP 204 No Content response.

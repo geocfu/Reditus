@@ -7,7 +7,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// This interface extends <see cref="IHttpFailure"/> to specify that the failure corresponds to an HTTP 500 status code.
 /// It is used to indicate that the server encountered an unexpected condition that prevented it from fulfilling the request.
 /// </summary>
-public interface IInternalServerError : IHttpFailure
+public interface IHttpInternalServerError : IHttpFailure
 {
     /// <summary>
     /// Creates an instance of <see cref="HttpResult"/> representing a general failure.

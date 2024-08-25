@@ -7,11 +7,11 @@
 /// but the processing has not been completed yet.
 /// </summary>
 /// <typeparam name="T">The type of the data payload returned in the HTTP 202 Accepted response.</typeparam>
-public interface IAccepted<T> : IHttpSuccess<T>
+public interface IHttpAccepted<T> : IHttpSuccess<T>
 {
     /// <summary>
     /// Creates a successful <see cref="HttpResult{T}"/> for an HTTP 202 Accepted response.
-    /// This method allows for the creation of a success result that includes a value of type <typeparamref name="T"/> 
+    /// This method allows for the creation of a success result that includes a value of type <typeparamref name="T"/>
     /// and corresponds to the HTTP 202 status code.
     /// Typically used when a request has been accepted for processing, but the result of the processing is not yet available,
     /// and a response with a body including the current state or additional information is being returned.

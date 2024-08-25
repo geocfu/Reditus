@@ -7,7 +7,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// This interface extends <see cref="IHttpFailure"/> to specify that the failure is related to an HTTP 403 status code.
 /// It is used to indicate that the server understands the request but refuses to authorize it.
 /// </summary>
-public interface IForbidden : IHttpFailure
+public interface IHttpForbidden : IHttpFailure
 {
     /// <summary>
     /// Creates an instance of <see cref="HttpResult"/> representing a general failure.

@@ -7,7 +7,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// This interface extends <see cref="IHttpFailure"/> to specify that the failure corresponds to an HTTP 404 status code.
 /// It is used to indicate that the requested resource could not be found on the server.
 /// </summary>
-public interface INotFound : IHttpFailure
+public interface IHttpNotFound : IHttpFailure
 {
     /// <summary>
     /// Creates an instance of <see cref="HttpResult"/> representing a general failure.

@@ -12,13 +12,13 @@ namespace Reditus.Extensions.AspNetCore.Http.Definitions;
 /// </summary>
 public class HttpUnprocessableEntity : Failure, IHttpUnprocessableEntity
 {
-    // <inheritdoc />
+    /// <inheritdoc />
     public string Type => "https://tools.ietf.org/html/rfc9110#section-15.5.21";
 
-    // <inheritdoc />
+    /// <inheritdoc />
     public string Title => "Unprocessable Entity";
 
-    // <inheritdoc />
+    /// <inheritdoc />
     public HttpStatusCode StatusCode => HttpStatusCode.UnprocessableEntity;
 
     /// <summary>

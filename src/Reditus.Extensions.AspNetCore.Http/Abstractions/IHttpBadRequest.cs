@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -9,11 +8,11 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// Represents an interface for handling HTTP 400 Bad Request failures.
 /// Provides a structure for validation errors and other failure details.
 /// </summary>
-public interface IBadRequest : IHttpFailure
+public interface IHttpBadRequest : IHttpFailure
 {
     /// <summary>
     /// Gets a read-only dictionary that contains validation errors.
-    /// The key represents the name of the field or parameter, 
+    /// The key represents the name of the field or parameter,
     /// and the value is an array of error messages associated with that field.
     /// </summary>
     public ReadOnlyDictionary<string, string[]> ValidationErrors { get; }
@@ -35,7 +34,8 @@ public interface IBadRequest : IHttpFailure
     /// <param name="message">The error message to be included in the result.</param>
     /// <param name="validationErrors">A dictionary of validation errors where the key is a field name and the value is an array of error messages.</param>
     /// <returns>A failed <see cref="HttpResult"/> instance containing the provided error message and validation errors.</returns>
-    public static abstract HttpResult CreateHttpResult(string message,
+    public static abstract HttpResult CreateHttpResult(
+        string message,
         IDictionary<string, string[]> validationErrors);
 
     /// <summary>
@@ -45,7 +45,8 @@ public interface IBadRequest : IHttpFailure
     /// <param name="exception">The exception that caused the failure.</param>
     /// <param name="validationErrors">A dictionary of validation errors where the key is a field name and the value is an array of error messages.</param>
     /// <returns>A failed <see cref="HttpResult"/> instance containing the provided exception and validation errors.</returns>
-    public static abstract HttpResult CreateHttpResult(Exception exception,
+    public static abstract HttpResult CreateHttpResult(
+        Exception exception,
         IDictionary<string, string[]> validationErrors);
 
     /// <summary>
@@ -57,7 +58,9 @@ public interface IBadRequest : IHttpFailure
     /// <param name="exception">The exception that caused the failure.</param>
     /// <param name="validationErrors">A dictionary of validation errors where the key is a field name and the value is an array of error messages.</param>
     /// <returns>A failed <see cref="HttpResult"/> instance containing the provided message, exception, and validation errors.</returns>
-    public static abstract HttpResult CreateHttpResult(string message, Exception exception,
+    public static abstract HttpResult CreateHttpResult(
+        string message,
+        Exception exception,
         IDictionary<string, string[]> validationErrors);
 
     /// <summary>
@@ -78,7 +81,8 @@ public interface IBadRequest : IHttpFailure
     /// <param name="message">The error message to be included in the result.</param>
     /// <param name="validationErrors">An enumerable of key-value pairs where each key is a field name and each value is an error message.</param>
     /// <returns>A failed <see cref="HttpResult"/> instance containing the provided message and validation errors.</returns>
-    public static abstract HttpResult CreateHttpResult(string message,
+    public static abstract HttpResult CreateHttpResult(
+        string message,
         IEnumerable<KeyValuePair<string, string>> validationErrors);
 
     /// <summary>
@@ -89,7 +93,8 @@ public interface IBadRequest : IHttpFailure
     /// <param name="exception">The exception that caused the failure.</param>
     /// <param name="validationErrors">An enumerable of key-value pairs where each key is a field name and each value is an error message.</param>
     /// <returns>A failed <see cref="HttpResult"/> instance containing the provided exception and validation errors.</returns>
-    public static abstract HttpResult CreateHttpResult(Exception exception,
+    public static abstract HttpResult CreateHttpResult(
+        Exception exception,
         IEnumerable<KeyValuePair<string, string>> validationErrors);
 
     /// <summary>
@@ -101,6 +106,8 @@ public interface IBadRequest : IHttpFailure
     /// <param name="exception">The exception that caused the failure.</param>
     /// <param name="validationErrors">An enumerable of key-value pairs where each key is a field name and each value is an error message.</param>
     /// <returns>A failed <see cref="HttpResult"/> instance containing the provided message, exception, and validation errors.</returns>
-    public static abstract HttpResult CreateHttpResult(string message, Exception exception,
+    public static abstract HttpResult CreateHttpResult(
+        string message,
+        Exception exception,
         IEnumerable<KeyValuePair<string, string>> validationErrors);
 }

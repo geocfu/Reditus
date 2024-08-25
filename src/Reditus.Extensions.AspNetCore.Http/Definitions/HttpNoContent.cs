@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using Reditus.Definitions;
 using Reditus.Extensions.AspNetCore.Http.Abstractions;

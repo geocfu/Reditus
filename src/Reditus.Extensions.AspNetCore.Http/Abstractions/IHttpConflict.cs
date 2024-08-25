@@ -7,7 +7,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// A conflict typically occurs when a request cannot be completed due to a conflict with the current state of the resource.
 /// This interface extends the <see cref="IHttpFailure"/> interface to provide a structure specific to conflict errors.
 /// </summary>
-public interface IConflict : IHttpFailure
+public interface IHttpConflict : IHttpFailure
 {
     /// <summary>
     /// Creates an instance of <see cref="HttpResult"/> representing a general failure.

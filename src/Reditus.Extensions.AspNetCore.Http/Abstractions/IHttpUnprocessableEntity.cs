@@ -8,7 +8,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Abstractions;
 /// It is used to indicate that the server understands the content type of the request entity and the syntax of the request entity is correct,
 /// but was unable to process the contained instructions.
 /// </summary>
-public interface IUnprocessableEntity : IHttpFailure
+public interface IHttpUnprocessableEntity : IHttpFailure
 {
     /// <summary>
     /// Creates an instance of <see cref="HttpResult"/> representing a general failure.
