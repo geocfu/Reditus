@@ -135,10 +135,11 @@ namespace Reditus.Extensions.AspNetCore.Http.Converters
         /// <summary>
         /// Adds validation errors from a <see cref="ReadOnlyDictionary{String, String[]}"/> to the provided <see cref="ModelStateDictionary"/>.
         /// </summary>
-        /// <param name="errors">The validation errors to add.</param>
         /// <param name="modelState">The model state to which errors will be added.</param>
-        private static void AddToModelState(ReadOnlyDictionary<string, string[]> errors,
-            ModelStateDictionary modelState)
+        /// <param name="errors">The validation errors to add.</param>
+        private static void AddToModelState(
+            ModelStateDictionary modelState,
+            ReadOnlyDictionary<string, string[]> errors)
         {
             foreach (var (key, keyErrors) in errors)
             {
@@ -160,7 +161,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Converters
 
             if (httpFailure.Errors.Count > 0)
             {
-                AddToModelState(httpFailure.Errors, _actionContextAccessor.ActionContext.ModelState);
+                AddToModelState(_actionContextAccessor.ActionContext.ModelState, httpFailure.Errors);
 
                 var validationProblemDetails =
                     _problemDetailsFactory.CreateValidationProblemDetails(
