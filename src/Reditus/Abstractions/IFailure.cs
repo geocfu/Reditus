@@ -8,7 +8,7 @@ namespace Reditus.Abstractions
     public interface IFailure
     {
         /// <summary>
-        /// Gets the message, if any, that describes the Failure.
+        /// Gets the message that describes the Failure.
         /// </summary>
         string Message { get; }
 

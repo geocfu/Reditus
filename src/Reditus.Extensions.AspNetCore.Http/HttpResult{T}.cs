@@ -58,9 +58,14 @@ public class HttpResult<T> : Result<T>, IHttpResult<T>
     {
         ArgumentNullException.ThrowIfNull(httpResult);
 
+        if (httpResult is not IHttpResult<T>)
+        {
+            throw new InvalidOperationException("Cannot convert a Result to an HttpResult.");
+        }
+
         if (httpResult.IsFailed)
         {
-            throw new InvalidOperationException("Converting a Failed Result to a Successful Result is invalid.");
+            throw new InvalidOperationException("Converting a Failed Result to a Successful HttpResult is invalid.");
         }
 
         return CreateSuccess(httpResult.Success);
@@ -88,9 +93,14 @@ public class HttpResult<T> : Result<T>, IHttpResult<T>
     {
         ArgumentNullException.ThrowIfNull(httpResult);
 
+        if (httpResult is not IHttpResult<TY>)
+        {
+            throw new InvalidOperationException("Cannot convert a Result to an HttpResult.");
+        }
+
         if (httpResult.IsSuccessful)
         {
-            throw new InvalidOperationException("Converting a Successful Result to a Failed Result is invalid.");
+            throw new InvalidOperationException("Converting a Successful Result to a Failed HttpResult is invalid.");
         }
 
         return CreateFail(httpResult.Failure);

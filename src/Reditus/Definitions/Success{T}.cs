@@ -4,26 +4,43 @@ using Reditus.Abstractions;
 namespace Reditus.Definitions
 {
     /// <summary>
-    /// Represents a Success{T} object.
+    /// Represents a Success object that encapsulates a value of type <typeparamref name="T"/>.
+    /// Implements the <see cref="ISuccess{T}"/> interface.
     /// </summary>
-    /// <typeparam name="T">The type contained in <see cref="T:Success{T}" />.</typeparam>
+    /// <typeparam name="T">The type of the value contained in the <see cref="Success{T}"/> class.</typeparam>
     public class Success<T> : ISuccess<T>
     {
-        /// <inheritdoc />
-        public T Value { get; }
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="Success{T}"/> class.
+        /// Backing field for the Value property.
         /// </summary>
-        /// <param name="value">The message that describes the Failure.</param>
-        /// <exception cref="ArgumentNullException">Thrown if value is null.</exception>
-        public Success(T value)
+        private T _value;
+
+        /// <inheritdoc />
+        public T Value
         {
-            if (value == null)
+            get
             {
-                throw new ArgumentNullException(nameof(value), "The Value property must have a value.");
+                return _value;
             }
 
+            private set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value), "The Value property must have a value.");
+                }
+
+                _value = value;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Success{T}"/> class with the specified value.
+        /// </summary>
+        /// <param name="value">The value to initialize the Success object with.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the provided value is null.</exception>
+        public Success(T value)
+        {
             Value = value;
         }
     }

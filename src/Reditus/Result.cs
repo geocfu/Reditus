@@ -17,12 +17,12 @@ namespace Reditus
         /// <summary>
         /// The internal failure, if any, of the Result.
         /// </summary>
-        private readonly IFailure _failure;
+        private IFailure _failure;
 
         /// <summary>
         /// The internal success, if any, of the Result.
         /// </summary>
-        private readonly ISuccess _success;
+        private ISuccess _success;
 
         /// <inheritdoc />
         public ISuccess Success
@@ -36,6 +36,18 @@ namespace Reditus
                 }
 
                 return _success;
+            }
+
+            private set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(
+                        nameof(value),
+                        "The Success property cannot be null.");
+                }
+
+                _success = value;
             }
         }
 
@@ -52,6 +64,18 @@ namespace Reditus
 
                 return _failure;
             }
+
+            private set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(
+                        nameof(value),
+                        "The Failure property cannot be null.");
+                }
+
+                _failure = value;
+            }
         }
 
         /// <summary>
@@ -62,15 +86,7 @@ namespace Reditus
         protected Result(ISuccess success)
         {
             _state = State.Successful;
-
-            if (success == null)
-            {
-                throw new ArgumentNullException(
-                    nameof(success),
-                    "The Success object of a successful Result cannot be null.");
-            }
-
-            _success = success;
+            Success = success;
         }
 
         /// <summary>
@@ -81,15 +97,7 @@ namespace Reditus
         protected Result(IFailure failure)
         {
             _state = State.Failed;
-
-            if (failure == null)
-            {
-                throw new ArgumentNullException(
-                    nameof(failure),
-                    "The Failure object of a failed Result cannot be null.");
-            }
-
-            _failure = failure;
+            Failure = failure;
         }
 
         /// <inheritdoc />

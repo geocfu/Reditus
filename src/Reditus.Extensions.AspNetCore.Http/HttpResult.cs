@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Reditus.Extensions.AspNetCore.Http.Abstractions;
 
 namespace Reditus.Extensions.AspNetCore.Http;
@@ -10,14 +11,10 @@ namespace Reditus.Extensions.AspNetCore.Http;
 /// </summary>
 public class HttpResult : Result, IHttpResult
 {
-    /// <summary>
-    /// Gets the successful outcome of the HTTP result, cast to <see cref="IHttpSuccess"/>.
-    /// </summary>
+    /// <inheritdoc />
     public new IHttpSuccess Success => (IHttpSuccess)base.Success;
 
-    /// <summary>
-    /// Gets the failed outcome of the HTTP result, cast to <see cref="IHttpFailure"/>.
-    /// </summary>
+    /// <inheritdoc />
     public new IHttpFailure Failure => (IHttpFailure)base.Failure;
 
     /// <summary>
@@ -59,9 +56,15 @@ public class HttpResult : Result, IHttpResult
     {
         ArgumentNullException.ThrowIfNull(httpResult);
 
+        if (httpResult is not IHttpResult)
+        {
+            throw new InvalidOperationException("Cannot convert a Result to an HttpResult.");
+        }
+
         if (httpResult.IsFailed)
         {
-            throw new InvalidOperationException("Converting a Failed Result to a Successful Result is invalid.");
+            throw new InvalidOperationException(
+                "Converting a Failed HttpResult to a Successful HttpResult is invalid.");
         }
 
         return CreateSuccess(httpResult.Success);
@@ -88,9 +91,15 @@ public class HttpResult : Result, IHttpResult
     {
         ArgumentNullException.ThrowIfNull(httpResult);
 
+        if (httpResult is not IHttpResult)
+        {
+            throw new InvalidOperationException("Cannot convert a Result to an HttpResult.");
+        }
+
         if (httpResult.IsSuccessful)
         {
-            throw new InvalidOperationException("Converting a Successful Result to a Failed Result is invalid.");
+            throw new InvalidOperationException(
+                "Converting a Successful HttpResult to a Failed HttpResult is invalid.");
         }
 
         return CreateFail(httpResult.Failure);

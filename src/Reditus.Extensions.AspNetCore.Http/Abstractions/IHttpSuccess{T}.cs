@@ -15,5 +15,5 @@ public interface IHttpSuccess<out T> : ISuccess<T>
     /// Gets the HTTP status code associated with this success.
     /// Example: <see cref="HttpStatusCode.OK"/> (200) or <see cref="HttpStatusCode.Created"/> (201).
     /// </summary>
-    public HttpStatusCode StatusCode { get; }
+    public HttpStatusCode HttpStatusCode { get; }
 }

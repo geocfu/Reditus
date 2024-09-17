@@ -7,6 +7,7 @@
         <VersionPrefix>3.0.0</VersionPrefix>
         <Authors>https://github.com/geocfu</Authors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Nullable>enable</Nullable>
 <!--        <PackageTags>reditus;result-pattern;pattern</PackageTags>-->
 <!--        <PackageProjectUrl>https://github.com/geocfu/Reditus</PackageProjectUrl>-->
 <!--        <PackageLicenseExpression>MIT</PackageLicenseExpression>-->
@@ -15,7 +16,7 @@
 <!--        <IncludeSymbols>true</IncludeSymbols>-->
 <!--        <SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
 <!--        <PackageReadmeFile>README.md</PackageReadmeFile>-->
-        <AnalysisMode>All</AnalysisMode>
+<!--        <AnalysisMode>All</AnalysisMode>-->
     </PropertyGroup>
 
     <ItemGroup>
