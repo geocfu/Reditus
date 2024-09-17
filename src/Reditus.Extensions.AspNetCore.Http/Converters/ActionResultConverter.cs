@@ -137,7 +137,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Converters
         /// </summary>
         /// <param name="modelState">The model state to which errors will be added.</param>
         /// <param name="errors">The validation errors to add.</param>
-        private static void AddToModelState(
+        private static void AddErrorsToModelState(
             ModelStateDictionary modelState,
             ReadOnlyDictionary<string, string[]> errors)
         {
@@ -161,7 +161,7 @@ namespace Reditus.Extensions.AspNetCore.Http.Converters
 
             if (httpFailure.Errors.Count > 0)
             {
-                AddToModelState(_actionContextAccessor.ActionContext.ModelState, httpFailure.Errors);
+                AddErrorsToModelState(_actionContextAccessor.ActionContext.ModelState, httpFailure.Errors);
 
                 var validationProblemDetails =
                     _problemDetailsFactory.CreateValidationProblemDetails(
