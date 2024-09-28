@@ -12,6 +12,6 @@ namespace Reditus.Abstractions
         /// Gets the Success, if any, attached to the Result.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when Result is Failed.</exception>
-        new ISuccess<T> Success { get; }
+        T Value { get; }
     }
 }

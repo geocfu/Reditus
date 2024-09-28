@@ -5,7 +5,7 @@ namespace Reditus.Abstractions
     /// <summary>
     /// Describes a Failure object.
     /// </summary>
-    public interface IFailure
+    public interface IError
     {
         /// <summary>
         /// Gets the message that describes the Failure.
