@@ -10,59 +10,27 @@ namespace Reditus
     public class Result : IResult
     {
         /// <summary>
-        /// The internal state of the Result.
+        /// Gets the internal state of the Result.
         /// </summary>
-        private readonly State _state;
+        protected State State { get; }
 
         /// <summary>
         /// The internal failure, if any, of the Result.
         /// </summary>
-        private IFailure _failure;
-
-        /// <summary>
-        /// The internal success, if any, of the Result.
-        /// </summary>
-        private ISuccess _success;
+        private Error _error;
 
         /// <inheritdoc />
-        public ISuccess Success
+        public Error Error
         {
             get
             {
-                if (_state == State.Failed)
-                {
-                    throw new InvalidOperationException(
-                        "Accessing the Success property of a failed Result is invalid.");
-                }
-
-                return _success;
-            }
-
-            private set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(
-                        nameof(value),
-                        "The Success property cannot be null.");
-                }
-
-                _success = value;
-            }
-        }
-
-        /// <inheritdoc />
-        public IFailure Failure
-        {
-            get
-            {
-                if (_state == State.Successful)
+                if (State == State.Successful)
                 {
                     throw new InvalidOperationException(
                         "Accessing the Failure property of a successful Result is invalid.");
                 }
 
-                return _failure;
+                return _error;
             }
 
             private set
@@ -74,37 +42,35 @@ namespace Reditus
                         "The Failure property cannot be null.");
                 }
 
-                _failure = value;
+                _error = value;
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
-        /// <param name="success">The success object.</param>
         /// <exception cref="ArgumentNullException">Thrown if message is null or empty.</exception>
-        protected Result(ISuccess success)
+        protected Result()
         {
-            _state = State.Successful;
-            Success = success;
+            State = State.Successful;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
-        /// <param name="failure">The failure to attach to the Result.</param>
+        /// <param name="error">The failure to attach to the Result.</param>
         /// <exception cref="ArgumentNullException">Thrown when failure is null.</exception>
-        protected Result(IFailure failure)
+        protected Result(Error error)
         {
-            _state = State.Failed;
-            Failure = failure;
+            State = State.Failed;
+            Error = error;
         }
 
         /// <inheritdoc />
-        public bool IsSuccessful => _state == State.Successful;
+        public bool IsSuccessful => State == State.Successful;
 
         /// <inheritdoc />
-        public bool IsFailed => _state == State.Failed;
+        public bool IsFailed => !IsSuccessful;
 
         /// <summary>
         /// Creates a successful Result.
@@ -112,38 +78,7 @@ namespace Reditus
         /// <returns>A successful Result instance.</returns>
         public static Result CreateSuccess()
         {
-            var success = new Success();
-            return CreateSuccess(success);
-        }
-
-        /// <summary>
-        /// Creates a successful Result.
-        /// </summary>
-        /// <param name="success">The success object of the result.</param>
-        /// <returns>A successful Result instance.</returns>
-        public static Result CreateSuccess(ISuccess success)
-        {
-            return new Result(success);
-        }
-
-        /// <summary>
-        /// Creates a successful Result from a different successful Result.
-        /// </summary>
-        /// <param name="result">The Result to copy from.</param>
-        /// <returns>A failed Result instance.</returns>
-        public static Result CreateSuccess(Result result)
-        {
-            if (result == null)
-            {
-                throw new ArgumentNullException(nameof(result), "Cannot convert null into a Result");
-            }
-
-            if (result.IsFailed)
-            {
-                throw new InvalidOperationException("Converting a Failed Result to a Successful Result is invalid.");
-            }
-
-            return CreateSuccess(result.Success);
+            return new Result();
         }
 
         /// <summary>
@@ -152,18 +87,18 @@ namespace Reditus
         /// <returns>A failed Result instance.</returns>
         public static Result CreateFail()
         {
-            var failure = new Failure();
+            var failure = new Error();
             return CreateFail(failure);
         }
 
         /// <summary>
         /// Creates a failed Result.
         /// </summary>
-        /// <param name="failure">The failure object of the result.</param>
+        /// <param name="error">The failure object of the result.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail(IFailure failure)
+        public static Result CreateFail(Error error)
         {
-            return new Result(failure);
+            return new Result(error);
         }
 
         /// <summary>
@@ -183,7 +118,7 @@ namespace Reditus
                 throw new InvalidOperationException("Converting a Successful Result to a Failed Result is invalid.");
             }
 
-            return CreateFail(result.Failure);
+            return CreateFail(result.Error);
         }
     }
 }

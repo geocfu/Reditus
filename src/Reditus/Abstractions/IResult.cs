@@ -1,4 +1,5 @@
 ﻿using System;
+using Reditus.Definitions;
 
 namespace Reditus.Abstractions
 {
@@ -8,16 +9,10 @@ namespace Reditus.Abstractions
     public interface IResult
     {
         /// <summary>
-        /// Gets the Success, if any, attached to the Result.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when Result is Failed.</exception>
-        ISuccess Success { get; }
-
-        /// <summary>
         /// Gets the Failure, if any, attached to the Result.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when Result is Successful.</exception>
-        IFailure Failure { get; }
+        Error Error { get; }
 
         /// <summary>
         /// Gets a value indicating whether a Result is Successful.
