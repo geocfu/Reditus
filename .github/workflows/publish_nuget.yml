@@ -5,7 +5,7 @@ on:
         tags: [ "v*" ]
 
 env:
-    PACKAGE_VERSION_FROM_TAG: ${{ env.GITHUB_REF_NAME }}
+    PACKAGE_VERSION_FROM_TAG: ${{ github.ref_name }}
     NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
 
 jobs:
