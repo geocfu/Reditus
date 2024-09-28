@@ -17,7 +17,7 @@ You can install [Reditus with NuGet](https://www.nuget.org/packages/Reditus):
 
 - **Versatile** — Can be used in any .NET project.
 - **Immutable** — Once a Result is created, it cannot be changed.
-- **Detailed on Failure** — A Result, when failed, contains a specific IError class.
+- **Detailed on Failure** — A Result, when failed, contains a specific Error class.
 - **Thread safe** — Results are immutable and by nature, safe to work with in multithreaded scenarios.
 - **Extensible** — Extend the Error class by introducing your very own Error classes.
 - **Fully tested** — The code has full coverage.
@@ -34,6 +34,9 @@ Typically, the `Result` class is being used by methods that don't return a value
 ```csharp
 var result = Result.Success();
 
+var result = Result.Fail();
+
+// the error can also hold a message
 var error = new Error("An error occured.");
 var result = Result.Fail(error);
 
@@ -76,8 +79,11 @@ The `Result<T>` class is being used by methods that return a value.
 ```csharp
 var result = Result<int>.Success(1);
 
+var result = Result<int>.Fail();
+
+// the error can also hold a message
 var error = new Error("An error occured.");
-var result = Result<int>.Fail(error);
+var result = Result.Fail(error);
 
 // the error can also hold an exception
 var error = new Error("An error occured.", new Exception());
@@ -125,11 +131,11 @@ result.IsFailed // false
 result.Error // throws InvalidOperationException as the result is not in a failed state
 
 
-var result = Result.Fail(new Error("Operation failed.");
+var result = Result.Fail();
 
 result.IsSuccessful // false
 result.IsFailed // true
-result.Error // IError instance
+result.Error // Error instance
 ```
 
 When the `Result<T>` holds a return value.
@@ -143,7 +149,7 @@ result.Value // 1
 result.Error // throws InvalidOperationException as the result is not in a fail state
 
 
-var result = Result<int>.Fail(new Error("Operation failed.");
+var result = Result<int>.Fail();
 
 result.IsSuccessful // false
 result.IsFailed // true
@@ -167,7 +173,7 @@ public sealed class NotFoundError : Error, IHttpError
 {
     public HttpStatusCode HttpStatusCode => HttpStatusCode.NotFound;
 
-    public NotFoundError(string message = "The request resource was not found.")
+    public NotFoundError(string message)
         : base(message)
     {
     }
@@ -185,7 +191,7 @@ public async Task<Result<IEnumerable<Project>>> GetProjects()
 
         if (!projects.Any())
         {
-            var error = new NotFoundError(); // <-- the new NotFoundError Error class
+            var error = new NotFoundError("The request resource was not found."); // <-- the new NotFoundError Error class
 
             return Result<IEnumerable<Project>>.Fail(error);
         }
@@ -198,18 +204,6 @@ public async Task<Result<IEnumerable<Project>>> GetProjects()
         var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
         return Result<IEnumerable<Project>>.Fail(error);
-    }
-}
-```
-
-You can also introduce simple `Error` classes to better reflect your domain.
-
-```csharp
-public sealed class ApplicationError : Error
-{
-    public ApplicationError(string eventId, string message, Exception exceptio)
-        : base(message, exception)
-    {
     }
 }
 ```
