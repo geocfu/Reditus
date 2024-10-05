@@ -3,8 +3,13 @@ namespace Reditus.Definitions
     /// <summary>
     /// The state of a Result.
     /// </summary>
-    public enum State : byte
+    public enum State
     {
+        /// <summary>
+        /// Default value
+        /// </summary>
+        None = 0,
+
         /// <summary>
         /// If the Result is successful.
         /// </summary>

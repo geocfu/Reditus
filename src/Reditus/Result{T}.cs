@@ -7,7 +7,7 @@ namespace Reditus
     /// <summary>
     /// Represents a Result{T} object.
     /// </summary>
-    /// <typeparam name="T">The type contained in <see cref="T:Result{T}" />.</typeparam>
+    /// <typeparam name="T">The type contained in <see cref="Result{T}" />.</typeparam>
     public class Result<T> : Result, IResult<T>
     {
         /// <summary>

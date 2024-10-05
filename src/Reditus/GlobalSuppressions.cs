@@ -7,5 +7,7 @@
 [assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed.")]
 [assembly: SuppressMessage("StyleCop.CSharp.NamingRules", "SA1309:FieldNamesMustNotBeginWithUnderscore", Justification = "Reviewed.")]
 [assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:FileMustHaveHeader", Justification = "Reviewed.")]
+[assembly: SuppressMessage("Usage", "CA1716: Identifiers should not match keywords", Justification = "Reviewed.")]
+[assembly: SuppressMessage("Usage", "CA1000: Do not declare static members on generic types", Justification = "Reviewed.")]
 
 // @formatter:on

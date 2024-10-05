@@ -5,7 +5,7 @@ namespace Reditus.Abstractions
     /// <summary>
     /// Describes a Result{T} object.
     /// </summary>
-    /// <typeparam name="T">The type contained in <see cref="T:Result{T}" />.</typeparam>
+    /// <typeparam name="T">The type contained in <see cref="Result{T}" />.</typeparam>
     public interface IResult<out T> : IResult
     {
         /// <summary>
