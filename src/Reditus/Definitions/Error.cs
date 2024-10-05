@@ -24,7 +24,7 @@ namespace Reditus.Definitions
 
             private set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     throw new ArgumentNullException(nameof(value), "The Message property must have a value.");
                 }
@@ -98,6 +98,19 @@ namespace Reditus.Definitions
         {
             Message = message;
             Exception = exception;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Error"/> class with a specified message and exception.
+        /// </summary>
+        /// <param name="exception">The exception to attach to the Failure.</param>
+        /// <param name="message">The message that describes the Failure.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the provided exception is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the provided message is null.</exception>
+        public Error(Exception exception, string message)
+        {
+            Exception = exception;
+            Message = message;
         }
     }
 }

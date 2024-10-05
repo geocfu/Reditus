@@ -76,7 +76,7 @@ public class ResultTests
     {
         const string reason = "Error reason.";
         var exception = new Exception();
-        var failure = new Error(reason, exception);
+        var failure = new Error(exception, reason);
         var result = Result.CreateFail(failure);
 
         Assert.Multiple(() =>

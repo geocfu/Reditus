@@ -1,33 +1,32 @@
-name: publish_nuget.yml
-on:
-    workflow_dispatch: # used to triger the job by hand
-    push:
-        tags: [ "v*" ]
+name: Publish Nuget Package
 
-env:
-    PACKAGE_VERSION_FROM_TAG: ${{ github.ref_name }}
-    NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
-    publish:
-        runs-on: ubuntu-latest
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
 
-        steps:
-            -   uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x.x'
 
-            -   name: Setup .NET
-                uses: actions/setup-dotnet@v4
-                with:
-                    dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore
 
-            -   name: Restore dependencies
-                run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
 
-            -   name: Build
-                run: dotnet build --no-restore --configuration Release
+      - name: Pack
+        run: dotnet pack --no-build --no-restore --configuration Release
 
-            -   name: Pack
-                run: dotnet pack --no-build --no-restore --configuration Release
-
-            -   name: Publish to nuget.org
-                run: dotnet nuget push **/bin/Release/Reditus.${PACKAGE_VERSION_FROM_TAG#v}.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      - name: Publish to nuget.org
+        run: dotnet nuget push "src/**/*.nupkg" -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
