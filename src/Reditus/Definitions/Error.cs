@@ -22,7 +22,11 @@ namespace Reditus.Definitions
                 return _message;
             }
 
+#if NET5_0_OR_GREATER
+            init
+#else
             private set
+#endif
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
@@ -46,7 +50,11 @@ namespace Reditus.Definitions
                 return _exception;
             }
 
+#if NET5_0_OR_GREATER
+            init
+#else
             private set
+#endif
             {
                 if (value == null)
                 {
