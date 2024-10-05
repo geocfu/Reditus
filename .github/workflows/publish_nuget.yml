@@ -29,4 +29,4 @@ jobs:
       - name: Publish to nuget.org
         run: dotnet nuget push "src/**/*.nupkg" -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
