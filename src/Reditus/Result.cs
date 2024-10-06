@@ -73,6 +73,14 @@ namespace Reditus
         public bool IsFailed => !IsSuccessful;
 
         /// <summary>
+        /// Implicitly converts an <see cref="Error"/> into a failed <see cref="Result"/>.
+        /// This allows a direct assignment of an <see cref="Error"/> to a <see cref="Result"/> without explicitly calling CreateFail(Error)">.
+        /// </summary>
+        /// <param name="error">The error to be wrapped in a failed <see cref="Result"/>.</param>
+        /// <returns>A failed <see cref="Result"/> instance containing the provided error.</returns>
+        public static implicit operator Result(Error error) => new Result(error);
+
+        /// <summary>
         /// Creates a successful Result.
         /// </summary>
         /// <returns>A successful Result instance.</returns>

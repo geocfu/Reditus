@@ -9,5 +9,7 @@
 [assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:FileMustHaveHeader", Justification = "Reviewed.")]
 [assembly: SuppressMessage("Usage", "CA1716: Identifiers should not match keywords", Justification = "Reviewed.")]
 [assembly: SuppressMessage("Usage", "CA1000: Do not declare static members on generic types", Justification = "Reviewed.")]
+[assembly: SuppressMessage("Usage", "CA2225: Operator overloads have named alternates", Justification = "Reviewed.")]
+[assembly: SuppressMessage("Usage", "CA1815: Override equals and operator equals on value types", Justification = "Reviewed.")]
 
 // @formatter:on
