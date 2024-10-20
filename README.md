@@ -18,6 +18,7 @@ You can install [Reditus with NuGet](https://www.nuget.org/packages/Reditus):
 - **Versatile** — Can be used in any .NET project.
 - **Immutable** — Once a Result is created, it cannot be changed.
 - **Detailed on Failure** — A Result, when failed, contains a specific Error class.
+- **With focus on DX** — Supports the implicit operator so it does not clutter your code.
 - **Thread safe** — Results are immutable and by nature, safe to work with in multithreaded scenarios.
 - **Extensible** — Extend the Result class or the Error class by introducing your very own classes.
 - **Fully tested** — The code has full coverage.
