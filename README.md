@@ -267,5 +267,5 @@ public async Task<Result<IEnumerable<Project>>> GetProjects()
 ```
 
 The `Error` class provides many constructors, so you are free to use whichever suits your needs
-best. [See definition](src/Reditus.Definitions/Error.cs)
+best. [See definition](src/Reditus/Definitions/Error.cs)
 
