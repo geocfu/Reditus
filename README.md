@@ -1,234 +1,182 @@
 # Reditus
 
+**Stop throwing exceptions for things you expected to happen.**
+
+Reditus is a small, dependency-free Result pattern library for .NET. Your methods return a `Result` that says
+whether they succeeded, and why they did not.
+
 [![NuGet Version](https://img.shields.io/nuget/v/Reditus)](https://www.nuget.org/packages/Reditus)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Reditus)](https://www.nuget.org/packages/Reditus)
+[![License](https://img.shields.io/github/license/geocfu/Reditus)](https://github.com/geocfu/Reditus/blob/main/LICENSE)
 
-Reditus, is a Result pattern library for every .NET application.
+```csharp
+public Result<User> FindUser(int id)
+{
+    var user = _users.Find(id);
 
-## Getting Started
+    if (user is null)
+    {
+        return new Error($"User {id} was not found."); // a failed result
+    }
 
-You can install [Reditus with NuGet](https://www.nuget.org/packages/Reditus):
+    return user; // a successful result
+}
+```
+
+## Why Reditus
+
+|                         |                                                                                      |
+|-------------------------|--------------------------------------------------------------------------------------|
+| **Honest signatures**   | A method returning `Result<User>` tells its caller it can fail. No hidden exceptions. |
+| **Clean code**          | Return a value or an `Error` directly. Reditus converts it into a result for you.     |
+| **Detailed failures**   | Every failed result carries an `Error` with a message and, optionally, the exception. |
+| **Immutable**           | A result never changes after it is created, so it is safe to share across threads.    |
+| **Extensible**          | Derive your own error types, such as `NotFoundError` or `ValidationError`.            |
+| **Runs everywhere**     | .NET Standard 2.0 and 2.1, and .NET 5 through .NET 10. No dependencies.               |
+
+## Install
 
 ```text
- Install-Package Reditus
+dotnet add package Reditus
 ```
 
-### Features
+Or get it from [NuGet](https://www.nuget.org/packages/Reditus).
 
-- **Versatile** — Can be used in any .NET project.
-- **Immutable** — Once a Result is created, it cannot be changed.
-- **Detailed on Failure** — A Result, when failed, contains a specific Error class.
-- **With focus on DX** — Supports the implicit operator so it does not clutter your code.
-- **Thread safe** — Results are immutable and by nature, safe to work with in multithreaded scenarios.
-- **Extensible** — Extend the Result class or the Error class by introducing your very own classes.
-- **Fully tested** — The code has full coverage.
+## Quick start
+
+Add the two namespaces:
+
+```csharp
+using Reditus;
+using Reditus.Definitions; // Error
+```
+
+Return a result from your method:
+
+```csharp
+public Result<int> Divide(int dividend, int divisor)
+{
+    if (divisor == 0)
+    {
+        return new Error("Cannot divide by zero.");
+    }
+
+    return dividend / divisor;
+}
+```
+
+Then check it where you call the method:
+
+```csharp
+var result = Divide(10, 2);
+
+if (result.IsFailed)
+{
+    Console.WriteLine(result.Error.Message);
+    return;
+}
+
+Console.WriteLine(result.Value); // 5
+```
+
+That is the whole pattern. The rest of this page is detail.
 
 ## Usage
-The `Result` object can be used as flow state control.
 
-The `Result<T>` object can hold any value. A class, a
-value-type, a struct, anything.
+### Two kinds of result
 
-### Creating a Result
+| Type        | Use it when the method...          | Example                         |
+|-------------|------------------------------------|---------------------------------|
+| `Result`    | returns nothing, but can fail      | `Result SendEmail(...)`         |
+| `Result<T>` | returns a value, and can fail      | `Result<Order> GetOrder(...)`   |
 
-Typically, the `Result` class is being used by methods that don't return a value.
+`T` can be anything: a class, a struct, a value type.
+
+### Creating a result
 
 ```csharp
-var result = Result.CreateSuccess(); // creates a result in success state
+// Result
+Result ok = Result.CreateSuccess();
+Result failed = Result.CreateFail(); // default message: "An error occured."
+Result failedWithReason = Result.CreateFail(new Error("Job was not executed."));
 
-var result = Result.CreatFail(); // creates a result in fail state
-
-var error = new Error("An error occured."); // the error can also hold a message
-var result = Result.CreatFail(error);
-
-// the error can also hold an exception
-var error = new Error("An error occured.", new Exception());
-var result = Result.CreatFail(error);
+// Result<T>
+Result<int> okWithValue = Result<int>.CreateSuccess(1);
+Result<int> failedValue = Result<int>.CreateFail(new Error("Job was not executed."));
 ```
 
-An example usage of the `Result` class.
+Or skip the factory methods and let the implicit conversion do the work:
 
 ```csharp
-public async Task<Result> ExecuteJob()
+public Result<int> ExecuteJob()
 {
     try
     {
-        var jobId = ExecuteJob();
+        var jobId = RunCleanup();
 
         if (jobId == 0)
         {
-            // create an Error indicating the reason of failure
-            var error = new Error("Cleanup job was not executed.");
-
-            return Result.CreateFail(error);
+            return new Error("Cleanup job was not executed."); // same as Result<int>.CreateFail(error)
         }
 
-        return Result.CreateSuccess();
+        return jobId; // same as Result<int>.CreateSuccess(jobId)
     }
     catch (Exception ex)
     {
-        // create an Error and attach the exception
-        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
-
-        return Result.CreateFail(error);
+        return new Error("An unexpected error occured while executing the cleanup job.", ex);
     }
 }
 ```
 
-The `Result` class also supports the implicit operator.
+A non-generic `Result` has no value to convert from, so its success is always `Result.CreateSuccess()`. Its failure
+can still be returned as a plain `Error`.
+
+### Reading a result
+
+| Member         | Successful result                  | Failed result                      |
+|----------------|------------------------------------|------------------------------------|
+| `IsSuccessful` | `true`                             | `false`                            |
+| `IsFailed`     | `false`                            | `true`                             |
+| `Value`        | the value (`Result<T>` only)       | throws `InvalidOperationException` |
+| `Error`        | throws `InvalidOperationException` | the `Error`                        |
+
+Check `IsSuccessful` or `IsFailed` before you read `Value` or `Error`.
+
+### Errors
+
+An `Error` holds a `Message` and an optional `Exception`:
 
 ```csharp
-public async Task<Result> ExecuteJob()
+new Error(); // message defaults to "An error occured."
+new Error("Payment was declined.");
+new Error(exception);
+new Error("Payment was declined.", exception);
+```
+
+### Passing a failure up the call chain
+
+When a method you call fails, hand the same error to your own caller, even if the value types differ:
+
+```csharp
+public Result<Invoice> CreateInvoice(int orderId)
 {
-    try
+    Result<Order> order = GetOrder(orderId);
+
+    if (order.IsFailed)
     {
-        var jobId = ExecuteJob();
-
-        if (jobId == 0)
-        {
-            // create an Error indicating the reason of failure
-            var error = new Error("Cleanup job was not executed.");
-
-            return error; // this implicitly is being converted into Result.CreateFail(error);
-        }
-
-        return Result.CreateSuccess(); // no implicit operator can be used since there is not value
+        return Result<Invoice>.CreateFail(order); // keeps the original Error
     }
-    catch (Exception ex)
-    {
-        // create an Error and attach the exception
-        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        return error;
-    }
+    return new Invoice(order.Value);
 }
 ```
 
-The `Result<T>` class is being used by methods that return a value.
+### Your own error types
+
+Derive from `Error` to give failures a meaning your application can act on, for example an HTTP status code:
 
 ```csharp
-var result = Result<int>.CreateSuccess(1); // creates a result in success state
-
-var result = Result<int>.CreateFail(); // creates a result in fail state
-
-// the error can also hold a message
-var error = new Error("An error occured.");
-var result = Result.CreateFail(error);
-
-// the error can also hold an exception
-var error = new Error("An error occured.", new Exception());
-var result = Result<int>.CreateFail(error);
-```
-
-An example usage of the `Result<T>` class.
-
-```csharp
-public async Task<Result<int>> ExecuteJob()
-{
-    try
-    {
-        var jobId = ExecuteCleanupJob();
-
-        if (jobId == 0)
-        {
-            // create an Error indicating the reason of failure
-            var error = new Error("Cleanup job was not executed.");
-
-            return Result<int>.CreateFail(error);
-        }
-
-        return Result<int>.CreateSuccess(jobId);
-    }
-    catch (Exception ex)
-    {
-        // create an Error and attach the exception
-        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
-
-        return Result<int>.CreateFail(error);
-    }
-}
-```
-
-The `Result<T>` class also supports the implicit operator.
-
-```csharp
-public async Task<Result<int>> ExecuteJob()
-{
-    try
-    {
-        var jobId = ExecuteCleanupJob();
-
-        if (jobId == 0)
-        {
-            // create an Error indicating the reason of failure
-            var error = new Error("Cleanup job was not executed.");
-
-            return error; // this implicitly is being converted into Result<int>.CreateFail(error);
-        }
-
-        return jobId; // this implicitly is being converted into Result<int>.CreateSuccess(error);
-    }
-    catch (Exception ex)
-    {
-        // create an Error and attach the exception
-        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
-
-        return error;
-    }
-}
-```
-
-### The anatomy of a Result
-
-A `Result` holds certain information about itself.
-
-```csharp
-var result = Result.CreateSuccess();
-
-result.IsSuccessful // true
-result.IsFailed // false
-result.Error // throws InvalidOperationException as the result is not in a failed state
-
-
-var result = Result.CreateFail();
-
-result.IsSuccessful // false
-result.IsFailed // true
-result.Error // Error instance
-```
-
-When the `Result<T>` holds a return value.
-
-```csharp
-var result = Result<int>.CreateSuccess(1);
-
-result.IsSuccessful // true
-result.IsFailed // false
-result.Value // 1
-result.Error // throws InvalidOperationException as the result is not in a fail state
-
-
-var result = Result<int>.CreateFail();
-
-result.IsSuccessful // false
-result.IsFailed // true
-result.Value // throws InvalidOperationException as the result is not in a success state
-result.Error // IError instance
-```
-
-### Extending
-
-You can introduce your very own Error classes by extending the existing one.
-
-The below custom `NotFoundError` class is being used when an application might need to return a NotFound 404 response.
-
-```csharp
-public interface ICustomError : IError
-{
-    public HttpStatusCode HttpStatusCode { get; }
-}
-
-public sealed class NotFoundError : Error, ICustomError
+public sealed class NotFoundError : Error
 {
     public HttpStatusCode HttpStatusCode => HttpStatusCode.NotFound;
 
@@ -239,34 +187,41 @@ public sealed class NotFoundError : Error, ICustomError
 }
 ```
 
-An example of the above custom `Error` class.
+Return it like any other error, and match on it at the edge of your application:
 
 ```csharp
-public async Task<Result<IEnumerable<Project>>> GetProjects()
+public Result<Project> GetProject(int id)
 {
-    try
+    var project = _projects.Find(id);
+
+    if (project is null)
     {
-        var projects = await GetProjects();
-
-        if (!projects.Any())
-        {
-            var error = new NotFoundError("The request resource was not found."); // <-- the new NotFoundError Error class
-
-            return error;
-        }
-
-        return jobId;
+        return new NotFoundError($"Project {id} was not found.");
     }
-    catch (Exception ex)
-    {
-        // create an Error and attach the exception
-        var error = new Error("An unexpected error occured while trying execute Cleanup job.", ex);
 
-        return error;
-    }
+    return project;
 }
 ```
 
-The `Error` class provides many constructors, so you are free to use whichever suits your needs
-best. [See definition](src/Reditus/Definitions/Error.cs)
+```csharp
+var result = GetProject(id);
 
+if (result.IsFailed)
+{
+    return result.Error is NotFoundError ? NotFound() : Problem(result.Error.Message);
+}
+
+return Ok(result.Value);
+```
+
+## Good to know
+
+- **A successful `Result<T>` cannot hold `null`.** Creating one with a `null` value throws `ArgumentNullException`.
+  Return an `Error` instead.
+- **Interface-typed values need the factory method.** C# does not allow implicit conversions from an interface, so
+  a variable declared as `IEnumerable<Project>` will not convert to `Result<IEnumerable<Project>>` on its own. Use
+  `Result<IEnumerable<Project>>.CreateSuccess(projects)`.
+
+## License
+
+Reditus is released under the [MIT License](https://github.com/geocfu/Reditus/blob/main/LICENSE).
