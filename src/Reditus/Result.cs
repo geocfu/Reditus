@@ -75,7 +75,7 @@ namespace Reditus
         /// Creates a successful Result.
         /// </summary>
         /// <returns>A successful Result instance.</returns>
-        public static Result CreateSuccess()
+        public static Result Success()
         {
             return new Result();
         }
@@ -84,10 +84,10 @@ namespace Reditus
         /// Creates a failed Result.
         /// </summary>
         /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail()
+        public static Result Failure()
         {
             var failure = new Error();
-            return CreateFail(failure);
+            return Failure(failure);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Reditus
         /// </summary>
         /// <param name="error">The error of the result.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail(Error error)
+        public static Result Failure(Error error)
         {
             return new Result(error);
         }
@@ -105,7 +105,7 @@ namespace Reditus
         /// </summary>
         /// <param name="result">The Result to copy from.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result CreateFail(Result result)
+        public static Result Failure(Result result)
         {
             if (result == null)
             {
@@ -117,7 +117,7 @@ namespace Reditus
                 throw new InvalidOperationException("Converting a Successful Result to a Failed Result is invalid.");
             }
 
-            return CreateFail(result.Error);
+            return Failure(result.Error);
         }
     }
 }

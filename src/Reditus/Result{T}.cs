@@ -111,7 +111,7 @@ namespace Reditus
         /// </summary>
         /// <param name="value">The value of the result.</param>
         /// <returns>A successful Result instance.</returns>
-        public static Result<T> CreateSuccess(T value)
+        public static Result<T> Success(T value)
         {
             return new Result<T>(value);
         }
@@ -120,10 +120,10 @@ namespace Reditus
         /// Creates a failed Result{T}.
         /// </summary>
         /// <returns>A failed Result instance.</returns>
-        public static Result<T> CreateFail()
+        public static Result<T> Failure()
         {
             var failure = new Error();
-            return CreateFail(failure);
+            return Failure(failure);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Reditus
         /// </summary>
         /// <param name="error">The error of the result.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result<T> CreateFail(Error error)
+        public static Result<T> Failure(Error error)
         {
             return new Result<T>(error);
         }
@@ -142,7 +142,7 @@ namespace Reditus
         /// <param name="result">The Result to copy from.</param>
         /// <returns>A failed Result instance.</returns>
         /// <typeparam name="TY">The type of the Result to copy from.</typeparam>
-        public static Result<T> CreateFail<TY>(Result<TY> result)
+        public static Result<T> Failure<TY>(Result<TY> result)
         {
             if (result == null)
             {
