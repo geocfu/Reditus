@@ -95,9 +95,9 @@ That is the whole pattern. The rest of this page is detail.
 
 ```csharp
 // Result
-Result ok = Result.Success();
-Result failed = Result.Failure(); // default message: "An error occured."
-Result failedWithReason = Result.Failure(new Error("Job was not executed."));
+Result ok = Result.CreateSuccess();
+Result failed = Result.CreateFail(); // default message: "An error occurred."
+Result failedWithReason = Result.CreateFail(new Error("Job was not executed."));
 
 // Result<T>
 Result<int> okWithValue = Result<int>.Success(1);
@@ -120,7 +120,7 @@ Check `IsSuccessful` or `IsFailed` before you read `Value` or `Error`.
 An `Error` holds a `Message` and an optional `Exception`:
 
 ```csharp
-new Error(); // message defaults to "An error occured."
+new Error(); // message defaults to "An error occurred."
 new Error("Payment was declined.");
 new Error(exception);
 new Error("Payment was declined.", exception);
