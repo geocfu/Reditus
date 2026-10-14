@@ -18,27 +18,27 @@ namespace Reditus.CompatibilityTests
 
         private static Result Save(bool succeed)
         {
-            return succeed ? Result.CreateSuccess() : Result.CreateFail(new Error("Could not save."));
+            return succeed ? Result.Success() : Result.Failure(new Error("Could not save."));
         }
 
         private static Result<int> Divide(int dividend, int divisor)
         {
             if (divisor == 0)
             {
-                return Result<int>.CreateFail(new Error("Cannot divide by zero."));
+                return Result<int>.Failure(new Error("Cannot divide by zero."));
             }
 
-            return Result<int>.CreateSuccess(dividend / divisor);
+            return Result<int>.Success(dividend / divisor);
         }
 
         private static Result<string> FindUser(int id)
         {
             if (id != 1)
             {
-                return Result<string>.CreateFail(new NotFoundError("User " + id + " was not found."));
+                return Result<string>.Failure(new NotFoundError("User " + id + " was not found."));
             }
 
-            return Result<string>.CreateSuccess("Alice");
+            return Result<string>.Success("Alice");
         }
 
         private static Result<string> Describe(int dividend, int divisor)
@@ -47,10 +47,10 @@ namespace Reditus.CompatibilityTests
 
             if (quotient.IsFailed)
             {
-                return Result<string>.CreateFail(quotient);
+                return Result<string>.Failure(quotient);
             }
 
-            return Result<string>.CreateSuccess("Result: " + quotient.Value);
+            return Result<string>.Success("Result: " + quotient.Value);
         }
 
         [Fact]
@@ -77,8 +77,8 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Failed_Result_Without_Error_Uses_Default_Message()
         {
-            Assert.Equal("An error occured.", Result.CreateFail().Error.Message);
-            Assert.Equal("An error occured.", Result<int>.CreateFail().Error.Message);
+            Assert.Equal("An error occured.", Result.Failure().Error.Message);
+            Assert.Equal("An error occured.", Result<int>.Failure().Error.Message);
         }
 
         [Fact]
@@ -115,17 +115,17 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Failure_Copied_Between_Results_Is_The_Same_Error_Instance()
         {
-            var failed = Result<int>.CreateFail(new Error("Original."));
+            var failed = Result<int>.Failure(new Error("Original."));
 
-            Assert.Same(failed.Error, Result<string>.CreateFail(failed).Error);
-            Assert.Same(failed.Error, Result.CreateFail(Result.CreateFail(failed.Error)).Error);
+            Assert.Same(failed.Error, Result<string>.Failure(failed).Error);
+            Assert.Same(failed.Error, Result.Failure(Result.Failure(failed.Error)).Error);
         }
 
         [Fact]
         public void Copying_A_Failure_From_A_Successful_Result_Throws()
         {
-            Assert.Throws<InvalidOperationException>(() => Result.CreateFail(Result.CreateSuccess()));
-            Assert.Throws<InvalidOperationException>(() => Result<string>.CreateFail(Result<int>.CreateSuccess(1)));
+            Assert.Throws<InvalidOperationException>(() => Result.Failure(Result.Success()));
+            Assert.Throws<InvalidOperationException>(() => Result<string>.Failure(Result<int>.Success(1)));
         }
 
         [Fact]
@@ -159,11 +159,11 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Null_Or_Empty_Inputs_Are_Rejected()
         {
-            Assert.Throws<ArgumentNullException>(() => Result<string>.CreateSuccess(null));
-            Assert.Throws<ArgumentNullException>(() => Result.CreateFail((Error)null));
-            Assert.Throws<ArgumentNullException>(() => Result<int>.CreateFail((Error)null));
-            Assert.Throws<ArgumentNullException>(() => Result.CreateFail((Result)null));
-            Assert.Throws<ArgumentNullException>(() => Result<int>.CreateFail((Result<string>)null));
+            Assert.Throws<ArgumentNullException>(() => Result<string>.Success(null));
+            Assert.Throws<ArgumentNullException>(() => Result.Failure((Error)null));
+            Assert.Throws<ArgumentNullException>(() => Result<int>.Failure((Error)null));
+            Assert.Throws<ArgumentNullException>(() => Result.Failure((Result)null));
+            Assert.Throws<ArgumentNullException>(() => Result<int>.Failure((Result<string>)null));
             Assert.Throws<ArgumentNullException>(() => new Error(" "));
             Assert.Throws<ArgumentNullException>(() => new Error((Exception)null));
         }

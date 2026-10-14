@@ -8,7 +8,7 @@ public class ResultCase
     // [Benchmark]
     // public Result Successful_With_No_Return_Value()
     // {
-    //     return Result.CreateSuccess();
+    //     return Result.Success();
     // }
     //
     // [Benchmark]

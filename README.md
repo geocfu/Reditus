@@ -16,10 +16,10 @@ public Result<User> FindUser(int id)
 
     if (user is null)
     {
-        return Result<User>.CreateFail(new Error($"User {id} was not found."));
+        return Result<User>.Failure(new Error($"User {id} was not found."));
     }
 
-    return Result<User>.CreateSuccess(user);
+    return Result<User>.Success(user);
 }
 ```
 
@@ -57,10 +57,10 @@ public Result<int> Divide(int dividend, int divisor)
 {
     if (divisor == 0)
     {
-        return Result<int>.CreateFail(new Error("Cannot divide by zero."));
+        return Result<int>.Failure(new Error("Cannot divide by zero."));
     }
 
-    return Result<int>.CreateSuccess(dividend / divisor);
+    return Result<int>.Success(dividend / divisor);
 }
 ```
 
@@ -95,13 +95,13 @@ That is the whole pattern. The rest of this page is detail.
 
 ```csharp
 // Result
-Result ok = Result.CreateSuccess();
-Result failed = Result.CreateFail(); // default message: "An error occured."
-Result failedWithReason = Result.CreateFail(new Error("Job was not executed."));
+Result ok = Result.Success();
+Result failed = Result.Failure(); // default message: "An error occured."
+Result failedWithReason = Result.Failure(new Error("Job was not executed."));
 
 // Result<T>
-Result<int> okWithValue = Result<int>.CreateSuccess(1);
-Result<int> failedValue = Result<int>.CreateFail(new Error("Job was not executed."));
+Result<int> okWithValue = Result<int>.Success(1);
+Result<int> failedValue = Result<int>.Failure(new Error("Job was not executed."));
 ```
 
 ### Reading a result
@@ -137,10 +137,10 @@ public Result<Invoice> CreateInvoice(int orderId)
 
     if (order.IsFailed)
     {
-        return Result<Invoice>.CreateFail(order); // keeps the original Error
+        return Result<Invoice>.Failure(order); // keeps the original Error
     }
 
-    return Result<Invoice>.CreateSuccess(new Invoice(order.Value));
+    return Result<Invoice>.Success(new Invoice(order.Value));
 }
 ```
 
@@ -169,10 +169,10 @@ public Result<Project> GetProject(int id)
 
     if (project is null)
     {
-        return Result<Project>.CreateFail(new NotFoundError($"Project {id} was not found."));
+        return Result<Project>.Failure(new NotFoundError($"Project {id} was not found."));
     }
 
-    return Result<Project>.CreateSuccess(project);
+    return Result<Project>.Success(project);
 }
 ```
 
@@ -190,7 +190,7 @@ return Ok(result.Value);
 ## Good to know
 
 - **A successful `Result<T>` cannot hold `null`.** Creating one with a `null` value throws `ArgumentNullException`.
-  Return `Result<T>.CreateFail(error)` instead.
+  Return `Result<T>.Failure(error)` instead.
 
 ## License
 

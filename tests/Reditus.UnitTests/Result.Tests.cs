@@ -8,7 +8,7 @@ public class ResultTests
     [Fact]
     public void Creating_Successful_Result_Should_Succeed()
     {
-        var result = Result.CreateSuccess();
+        var result = Result.Success();
 
         Assert.Multiple(() =>
         {
@@ -22,7 +22,7 @@ public class ResultTests
     [Fact]
     public void Creating_Failed_Result_Should_Succeed()
     {
-        var result = Result.CreateFail();
+        var result = Result.Failure();
 
         Assert.Multiple(() =>
         {
@@ -40,7 +40,7 @@ public class ResultTests
     {
         const string reason = "Error reason.";
         var failure = new Error(reason);
-        var result = Result.CreateFail(failure);
+        var result = Result.Failure(failure);
 
         Assert.Multiple(() =>
         {
@@ -58,7 +58,7 @@ public class ResultTests
     {
         var exception = new Exception();
         var failure = new Error(exception);
-        var result = Result.CreateFail(failure);
+        var result = Result.Failure(failure);
 
         Assert.Multiple(() =>
         {
@@ -77,7 +77,7 @@ public class ResultTests
         const string reason = "Error reason.";
         var exception = new Exception();
         var failure = new Error(exception, reason);
-        var result = Result.CreateFail(failure);
+        var result = Result.Failure(failure);
 
         Assert.Multiple(() =>
         {
@@ -94,7 +94,7 @@ public class ResultTests
     public void Creating_Failed_Result_With_Error_Should_Succeed()
     {
         var error = new Error();
-        var result = Result.CreateFail(error);
+        var result = Result.Failure(error);
 
         Assert.Multiple(() =>
         {
@@ -111,14 +111,14 @@ public class ResultTests
     public void Creating_Failed_Result_With_Null_Error_Should_Fail()
     {
         Error error = null!;
-        Assert.Throws<ArgumentNullException>(() => Result.CreateFail(error));
+        Assert.Throws<ArgumentNullException>(() => Result.Failure(error));
     }
 
     [Fact]
     public void Creating_Failed_Result_From_A_Different_Failed_Result_Should_Succeed()
     {
-        var oldResult = Result.CreateFail();
-        var newResult = Result.CreateFail(oldResult);
+        var oldResult = Result.Failure();
+        var newResult = Result.Failure(oldResult);
 
         Assert.Multiple(() =>
         {
@@ -135,6 +135,6 @@ public class ResultTests
     public void Creating_Failed_Result_From_Null_Result_Should_Fail()
     {
         Result oldResult = null!;
-        Assert.Throws<ArgumentNullException>(() => Result.CreateFail(oldResult));
+        Assert.Throws<ArgumentNullException>(() => Result.Failure(oldResult));
     }
 }
