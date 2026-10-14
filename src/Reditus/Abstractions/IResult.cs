@@ -9,7 +9,7 @@ namespace Reditus.Abstractions
     public interface IResult
     {
         /// <summary>
-        /// Gets the Failure, if any, attached to the Result.
+        /// Gets the Error, if any, attached to the Result.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when Result is Successful.</exception>
         Error Error { get; }
