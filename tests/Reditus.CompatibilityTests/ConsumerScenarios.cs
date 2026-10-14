@@ -77,8 +77,8 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Failed_Result_Without_Error_Uses_Default_Message()
         {
-            Assert.Equal("An error occurred.", Result.CreateFail().Error.Message);
-            Assert.Equal("An error occurred.", Result<int>.CreateFail().Error.Message);
+            Assert.Equal("An error occurred.", Result.Failure().Error.Message);
+            Assert.Equal("An error occurred.", Result<int>.Failure().Error.Message);
         }
 
         [Fact]
@@ -159,11 +159,11 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Null_Or_Empty_Inputs_Are_Rejected()
         {
-            Assert.Throws<ArgumentNullException>(() => Result<string>.CreateSuccess(null));
-            Assert.Throws<ArgumentNullException>(() => Result.CreateFail((Error)null));
-            Assert.Throws<ArgumentNullException>(() => Result<int>.CreateFail((Error)null));
-            Assert.Throws<ArgumentNullException>(() => Result.CreateFail((Result)null));
-            Assert.Throws<ArgumentNullException>(() => Result<int>.CreateFail((Result<string>)null));
+            Assert.Throws<ArgumentNullException>(() => Result<string>.Success(null));
+            Assert.Throws<ArgumentNullException>(() => Result.Failure((Error)null));
+            Assert.Throws<ArgumentNullException>(() => Result<int>.Failure((Error)null));
+            Assert.Throws<ArgumentNullException>(() => Result.Failure((Result)null));
+            Assert.Throws<ArgumentNullException>(() => Result<int>.Failure((Result<string>)null));
             Assert.Throws<ArgumentNullException>(() => new Error((string)null));
             Assert.Throws<ArgumentException>(() => new Error(" "));
             Assert.Throws<ArgumentNullException>(() => new Error((Exception)null));

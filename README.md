@@ -95,9 +95,9 @@ That is the whole pattern. The rest of this page is detail.
 
 ```csharp
 // Result
-Result ok = Result.CreateSuccess();
-Result failed = Result.CreateFail(); // default message: "An error occurred."
-Result failedWithReason = Result.CreateFail(new Error("Job was not executed."));
+Result ok = Result.Success();
+Result failed = Result.Failure(); // default message: "An error occurred."
+Result failedWithReason = Result.Failure(new Error("Job was not executed."));
 
 // Result<T>
 Result<int> okWithValue = Result<int>.Success(1);
@@ -191,6 +191,19 @@ return Ok(result.Value);
 
 - **A successful `Result<T>` cannot hold `null`.** Creating one with a `null` value throws `ArgumentNullException`.
   Return `Result<T>.Failure(error)` instead.
+- **An `Error` message cannot be empty.** A `null` message throws `ArgumentNullException`, and an empty or
+  whitespace message throws `ArgumentException`.
+
+## Upgrading from 2.x
+
+The factory methods were renamed in 3.0:
+
+| 2.x                  | 3.0                |
+|----------------------|--------------------|
+| `CreateSuccess(...)` | `Success(...)`     |
+| `CreateFail(...)`    | `Failure(...)`     |
+
+A blank `Error` message now throws `ArgumentException` instead of `ArgumentNullException`.
 
 ## License
 
