@@ -1,0 +1,19 @@
+name: Unit Tests
+
+on:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v7
+        with:
+          dotnet-version: '10.x.x'
+
+      - name: Test
+        run: dotnet test tests/Reditus.UnitTests/Reditus.UnitTests.csproj --configuration Release
