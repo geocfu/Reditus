@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- The most popular consumer of each library target, EOL ones included: net48 uses netstandard2.0, netcoreapp3.1 uses netstandard2.1, net5.0+ use their own build. -->
+        <!-- No LangVersion on purpose: each target compiles with its default C# version (7.3 up to 14), like a real consumer. -->
+        <TargetFrameworks>net48;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+        <!-- The EOL targets pull in runtime packages with known advisories on purpose; this project is never shipped. -->
+        <NuGetAudit>false</NuGetAudit>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit" Version="2.9.3" />
+    </ItemGroup>
+
+    <!-- Test SDK 18 and runner 4 support only net472 and net8.0+, so the older .NET Core targets use the last versions that run on them. -->
+    <Choose>
+        <When Condition="'$(TargetFramework)' == 'netcoreapp3.1' Or '$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net7.0'">
+            <ItemGroup>
+                <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+                <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+                  <PrivateAssets>all</PrivateAssets>
+                  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+                </PackageReference>
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <ItemGroup>
+                <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+                <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1">
+                  <PrivateAssets>all</PrivateAssets>
+                  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+                </PackageReference>
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Reditus\Reditus.csproj" />
+    </ItemGroup>
+
+</Project>
