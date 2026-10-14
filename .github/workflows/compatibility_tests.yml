@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    name: Compatibility tests
+    name: Compatibility Tests
     # Windows, because the net48 target needs .NET Framework.
     runs-on: windows-latest
 
