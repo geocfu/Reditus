@@ -16,10 +16,10 @@ public Result<User> FindUser(int id)
 
     if (user is null)
     {
-        return new Error($"User {id} was not found."); // a failed result
+        return Result<User>.CreateFail(new Error($"User {id} was not found."));
     }
 
-    return user; // a successful result
+    return Result<User>.CreateSuccess(user);
 }
 ```
 
@@ -28,7 +28,6 @@ public Result<User> FindUser(int id)
 |                         |                                                                                      |
 |-------------------------|--------------------------------------------------------------------------------------|
 | **Honest signatures**   | A method returning `Result<User>` tells its caller it can fail. No hidden exceptions. |
-| **Clean code**          | Return a value or an `Error` directly. Reditus converts it into a result for you.     |
 | **Detailed failures**   | Every failed result carries an `Error` with a message and, optionally, the exception. |
 | **Immutable**           | A result never changes after it is created, so it is safe to share across threads.    |
 | **Extensible**          | Derive your own error types, such as `NotFoundError` or `ValidationError`.            |
@@ -58,10 +57,10 @@ public Result<int> Divide(int dividend, int divisor)
 {
     if (divisor == 0)
     {
-        return new Error("Cannot divide by zero.");
+        return Result<int>.CreateFail(new Error("Cannot divide by zero."));
     }
 
-    return dividend / divisor;
+    return Result<int>.CreateSuccess(dividend / divisor);
 }
 ```
 
@@ -105,32 +104,6 @@ Result<int> okWithValue = Result<int>.CreateSuccess(1);
 Result<int> failedValue = Result<int>.CreateFail(new Error("Job was not executed."));
 ```
 
-Or skip the factory methods and let the implicit conversion do the work:
-
-```csharp
-public Result<int> ExecuteJob()
-{
-    try
-    {
-        var jobId = RunCleanup();
-
-        if (jobId == 0)
-        {
-            return new Error("Cleanup job was not executed."); // same as Result<int>.CreateFail(error)
-        }
-
-        return jobId; // same as Result<int>.CreateSuccess(jobId)
-    }
-    catch (Exception ex)
-    {
-        return new Error("An unexpected error occured while executing the cleanup job.", ex);
-    }
-}
-```
-
-A non-generic `Result` has no value to convert from, so its success is always `Result.CreateSuccess()`. Its failure
-can still be returned as a plain `Error`.
-
 ### Reading a result
 
 | Member         | Successful result                  | Failed result                      |
@@ -167,7 +140,7 @@ public Result<Invoice> CreateInvoice(int orderId)
         return Result<Invoice>.CreateFail(order); // keeps the original Error
     }
 
-    return new Invoice(order.Value);
+    return Result<Invoice>.CreateSuccess(new Invoice(order.Value));
 }
 ```
 
@@ -196,10 +169,10 @@ public Result<Project> GetProject(int id)
 
     if (project is null)
     {
-        return new NotFoundError($"Project {id} was not found.");
+        return Result<Project>.CreateFail(new NotFoundError($"Project {id} was not found."));
     }
 
-    return project;
+    return Result<Project>.CreateSuccess(project);
 }
 ```
 
@@ -217,10 +190,7 @@ return Ok(result.Value);
 ## Good to know
 
 - **A successful `Result<T>` cannot hold `null`.** Creating one with a `null` value throws `ArgumentNullException`.
-  Return an `Error` instead.
-- **Interface-typed values need the factory method.** C# does not allow implicit conversions from an interface, so
-  a variable declared as `IEnumerable<Project>` will not convert to `Result<IEnumerable<Project>>` on its own. Use
-  `Result<IEnumerable<Project>>.CreateSuccess(projects)`.
+  Return `Result<T>.CreateFail(error)` instead.
 
 ## License
 

@@ -107,22 +107,6 @@ namespace Reditus
         }
 
         /// <summary>
-        /// Implicitly converts a value of type <typeparamref name="T"/> into a successful <see cref="Result{T}"/>.
-        /// This allows a direct assignment of a value to a <see cref="Result{T}"/> without explicitly calling <see cref="Result{T}.CreateSuccess(T)"/>.
-        /// </summary>
-        /// <param name="value">The value to be wrapped in a successful <see cref="Result{T}"/>.</param>
-        /// <returns>A successful <see cref="Result{T}"/> instance containing the provided value.</returns>
-        public static implicit operator Result<T>(T value) => new Result<T>(value);
-
-        /// <summary>
-        /// Implicitly converts an <see cref="Error"/> into a failed <see cref="Result{T}"/>.
-        /// This allows a direct assignment of an <see cref="Error"/> to a <see cref="Result{T}"/> without explicitly calling CreateFail(Error)">.
-        /// </summary>
-        /// <param name="error">The error to be wrapped in a failed <see cref="Result{T}"/>.</param>
-        /// <returns>A failed <see cref="Result{T}"/> instance containing the provided error.</returns>
-        public static implicit operator Result<T>(Error error) => new Result<T>(error);
-
-        /// <summary>
         /// Creates a successful Result{T}.
         /// </summary>
         /// <param name="value">The success object of the result.</param>
