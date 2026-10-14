@@ -12,10 +12,10 @@ namespace Reditus
         /// <summary>
         /// Gets the internal state of the Result.
         /// </summary>
-        protected State State { get; }
+        private State State { get; }
 
         /// <summary>
-        /// The internal failure, if any, of the Result.
+        /// The internal error, if any, of the Result.
         /// </summary>
         private Error _error;
 
@@ -27,7 +27,7 @@ namespace Reditus
                 if (State == State.Successful)
                 {
                     throw new InvalidOperationException(
-                        "Accessing the Failure property of a successful Result is invalid.");
+                        "Accessing the Error property of a successful Result is invalid.");
                 }
 
                 return _error;
@@ -39,7 +39,7 @@ namespace Reditus
                 {
                     throw new ArgumentNullException(
                         nameof(value),
-                        "The Failure property cannot be null.");
+                        "The Error property cannot be null.");
                 }
 
                 _error = value;
@@ -49,7 +49,6 @@ namespace Reditus
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if message is null or empty.</exception>
         protected Result()
         {
             State = State.Successful;
@@ -58,8 +57,8 @@ namespace Reditus
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
-        /// <param name="error">The failure to attach to the Result.</param>
-        /// <exception cref="ArgumentNullException">Thrown when failure is null.</exception>
+        /// <param name="error">The error to attach to the Result.</param>
+        /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
         protected Result(Error error)
         {
             State = State.Failed;
@@ -94,7 +93,7 @@ namespace Reditus
         /// <summary>
         /// Creates a failed Result.
         /// </summary>
-        /// <param name="error">The failure object of the result.</param>
+        /// <param name="error">The error of the result.</param>
         /// <returns>A failed Result instance.</returns>
         public static Result CreateFail(Error error)
         {

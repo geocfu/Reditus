@@ -77,8 +77,8 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Failed_Result_Without_Error_Uses_Default_Message()
         {
-            Assert.Equal("An error occured.", Result.CreateFail().Error.Message);
-            Assert.Equal("An error occured.", Result<int>.CreateFail().Error.Message);
+            Assert.Equal("An error occurred.", Result.CreateFail().Error.Message);
+            Assert.Equal("An error occurred.", Result<int>.CreateFail().Error.Message);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Reditus.CompatibilityTests
             Assert.Same(exception, withBoth.Exception);
             Assert.Equal("Payment was declined.", withBothReversed.Message);
             Assert.Same(exception, withBothReversed.Exception);
-            Assert.Equal("An error occured.", withException.Message);
+            Assert.Equal("An error occurred.", withException.Message);
             Assert.Same(exception, withException.Exception);
         }
 
@@ -164,7 +164,8 @@ namespace Reditus.CompatibilityTests
             Assert.Throws<ArgumentNullException>(() => Result<int>.CreateFail((Error)null));
             Assert.Throws<ArgumentNullException>(() => Result.CreateFail((Result)null));
             Assert.Throws<ArgumentNullException>(() => Result<int>.CreateFail((Result<string>)null));
-            Assert.Throws<ArgumentNullException>(() => new Error(" "));
+            Assert.Throws<ArgumentNullException>(() => new Error((string)null));
+            Assert.Throws<ArgumentException>(() => new Error(" "));
             Assert.Throws<ArgumentNullException>(() => new Error((Exception)null));
         }
 

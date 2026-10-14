@@ -10,13 +10,13 @@ namespace Reditus.Abstractions
     public interface IResult<out T>
     {
         /// <summary>
-        /// Gets the Success, if any, attached to the Result.
+        /// Gets the Value, if any, attached to the Result.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when Result is Failed.</exception>
         T Value { get; }
 
         /// <summary>
-        /// Gets the Failure, if any, attached to the Result.
+        /// Gets the Error, if any, attached to the Result.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when Result is Successful.</exception>
         Error Error { get; }

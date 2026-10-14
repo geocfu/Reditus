@@ -28,7 +28,7 @@ public class ResultTests
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
-            Assert.Equal("An error occured.", result.Error.Message);
+            Assert.Equal("An error occurred.", result.Error.Message);
             Assert.Null(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -64,7 +64,7 @@ public class ResultTests
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
-            Assert.Equal("An error occured.", result.Error.Message);
+            Assert.Equal("An error occurred.", result.Error.Message);
             Assert.NotNull(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -100,7 +100,7 @@ public class ResultTests
         {
             Assert.NotNull(result);
             Assert.NotNull(result.Error);
-            Assert.Equal("An error occured.", result.Error.Message);
+            Assert.Equal("An error occurred.", result.Error.Message);
             Assert.Null(result.Error.Exception);
             Assert.False(result.IsSuccessful);
             Assert.True(result.IsFailed);
@@ -124,7 +124,7 @@ public class ResultTests
         {
             Assert.NotNull(newResult);
             Assert.NotNull(newResult.Error);
-            Assert.Equal("An error occured.", newResult.Error.Message);
+            Assert.Equal("An error occurred.", newResult.Error.Message);
             Assert.Null(newResult.Error.Exception);
             Assert.False(newResult.IsSuccessful);
             Assert.True(newResult.IsFailed);
