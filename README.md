@@ -2,36 +2,91 @@
 
 **Stop throwing exceptions for things you expected to happen.**
 
-Reditus is a small, dependency-free Result pattern library for .NET. Your methods return a `Result` that says
-whether they succeeded, and why they did not.
-
 [![NuGet Version](https://img.shields.io/nuget/v/Reditus)](https://www.nuget.org/packages/Reditus)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Reditus)](https://www.nuget.org/packages/Reditus)
+[![Coverage](https://codecov.io/gh/geocfu/Reditus/graph/badge.svg)](https://codecov.io/gh/geocfu/Reditus)
 [![License](https://img.shields.io/github/license/geocfu/Reditus)](https://github.com/geocfu/Reditus/blob/main/LICENSE)
 
+[![Unit Tests](https://github.com/geocfu/Reditus/actions/workflows/unit_tests.yml/badge.svg?event=pull_request)](https://github.com/geocfu/Reditus/actions/workflows/unit_tests.yml?query=event%3Apull_request)
+[![Compatibility Tests](https://github.com/geocfu/Reditus/actions/workflows/compatibility_tests.yml/badge.svg?event=pull_request)](https://github.com/geocfu/Reditus/actions/workflows/compatibility_tests.yml?query=event%3Apull_request)
+
+Reditus is a small, dependency-free **Result pattern** library for .NET. Your methods return a `Result` that says
+whether they succeeded and, if not, why. Failures become values you can see in the signature, pass along and
+match on, instead of exceptions you have to remember to catch.
+
 ```csharp
-public Result<User> FindUser(int id)
+public async Task<Result<User>> FindUserAsync(int id, CancellationToken cancellationToken)
 {
-    var user = _users.Find(id);
+    var user = await _users.FindAsync(id, cancellationToken);
 
     if (user is null)
     {
-        return Result<User>.Failure(new Error($"User {id} was not found."));
+        // An OperationCanceledError if the request was canceled, otherwise the NotFoundError
+        return Result<User>.Failure(new NotFoundError($"User {id} was not found."), cancellationToken);
     }
 
     return Result<User>.Success(user);
 }
 ```
 
+`NotFoundError` is not part of Reditus; it is an error type you write in a few lines. See
+[Your own error types](#your-own-error-types).
+
+## Contents
+
+- [Why Reditus](#why-reditus)
+- [Install](#install)
+- [Quick start](#quick-start)
+- [Usage](#usage)
+  - [Two kinds of result](#two-kinds-of-result)
+  - [Creating a result](#creating-a-result)
+  - [Reading a result](#reading-a-result)
+  - [Errors](#errors)
+  - [Passing a failure up the call chain](#passing-a-failure-up-the-call-chain)
+  - [Your own error types](#your-own-error-types)
+  - [Cancellation](#cancellation)
+- [Good to know](#good-to-know)
+- [Upgrading from 2.x](#upgrading-from-2x)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Why Reditus
 
-|                         |                                                                                      |
-|-------------------------|--------------------------------------------------------------------------------------|
-| **Honest signatures**   | A method returning `Result<User>` tells its caller it can fail. No hidden exceptions. |
-| **Detailed failures**   | Every failed result carries an `Error` with a message and, optionally, the exception. |
-| **Immutable**           | A result never changes after it is created, so it is safe to share across threads.    |
-| **Extensible**          | Derive your own error types, such as `NotFoundError` or `ValidationError`.            |
-| **Runs everywhere**     | .NET Standard 2.0 and 2.1, and .NET 5 through .NET 10. No dependencies.               |
+An exception is the right tool for something that should never happen. For a user that does not exist or a
+payment that was declined, it is a poor one: the signature hides it, every caller has to remember to catch it,
+and every throw pays for a stack trace.
+
+**Before**: the failure is invisible until it is thrown.
+
+```csharp
+public User FindUser(int id)
+{
+    return _users.Find(id) ?? throw new UserNotFoundException(id);
+}
+```
+
+**After**: the failure is part of the contract.
+
+```csharp
+public Result<User> FindUser(int id)
+{
+    var user = _users.Find(id);
+
+    return user is null
+        ? Result<User>.Failure(new NotFoundError($"User {id} was not found."))
+        : Result<User>.Success(user);
+}
+```
+
+|                          |                                                                                                   |
+|--------------------------|---------------------------------------------------------------------------------------------------|
+| 🔍 **Honest signatures** | A method returning `Result<User>` tells its caller it can fail. No hidden exceptions.             |
+| 🧾 **Detailed failures** | Every failed result carries an `Error` with a message and, optionally, the exception.             |
+| 🛑 **Cancellation-aware** | Tell a canceled operation apart from a real failure with `OperationCanceledError`.               |
+| 🧩 **Extensible**        | Derive your own error types, such as `NotFoundError` or `ValidationError`.                        |
+| 🔒 **Immutable**         | A result never changes after it is created, so it is safe to share across threads.                |
+| 🌍 **Runs everywhere**   | .NET Standard 2.0 and 2.1, and .NET 5 through .NET 10. Zero dependencies.                         |
+| ✅ **Fully tested**      | 100% line and branch coverage, enforced on every pull request into `main` and `develop`.          |
 
 ## Install
 
@@ -187,6 +242,60 @@ if (result.IsFailed)
 return Ok(result.Value);
 ```
 
+### Cancellation
+
+An `OperationCanceledError` tells callers that an operation was canceled, so they can tell a cancellation apart
+from a failure. Catch the exception once, where it is thrown, and pass the token to `Failure`:
+
+```csharp
+public async Task<Result<Report>> GetReportAsync(int id, CancellationToken cancellationToken)
+{
+    try
+    {
+        var report = await _client.GetReportAsync(id, cancellationToken);
+        return Result<Report>.Success(report);
+    }
+    catch (Exception exception)
+    {
+        return Result<Report>.Failure(exception, cancellationToken);
+    }
+}
+```
+
+The error is an `OperationCanceledError` only when the exception is an `OperationCanceledException` and
+`cancellationToken` was canceled. Any other exception, including an `OperationCanceledException` from a timeout
+while your token was not canceled, becomes a plain `Error`. Either way, `Error.Exception` holds the caught exception.
+Pass the result up like any other failure.
+
+In your own code, check the token instead of throwing:
+
+```csharp
+if (cancellationToken.IsCancellationRequested)
+{
+    return Result<Report>.Failure(new OperationCanceledError());
+}
+```
+
+When a step fails outside a `catch`, for example a call that returned no data because it was canceled, pass the
+token to `Failure` along with the error. You get an `OperationCanceledError` if the token was canceled, and
+otherwise the error you pass:
+
+```csharp
+if (report is null)
+{
+    return Result<Report>.Failure(new NotFoundError($"Report {id} was not found."), cancellationToken);
+}
+```
+
+Match on it at the edge of your application:
+
+```csharp
+if (result.IsFailed)
+{
+    return result.Error is OperationCanceledError ? new EmptyResult() : Problem(result.Error.Message);
+}
+```
+
 ## Good to know
 
 - **A successful `Result<T>` cannot hold `null`.** Creating one with a `null` value throws `ArgumentNullException`.
@@ -204,6 +313,18 @@ The factory methods were renamed in 3.0:
 | `CreateFail(...)`    | `Failure(...)`     |
 
 A blank `Error` message now throws `ArgumentException` instead of `ArgumentNullException`.
+
+## Contributing
+
+Issues and pull requests are welcome on [GitHub](https://github.com/geocfu/Reditus/issues). Before you open a
+pull request, run the tests:
+
+```text
+dotnet test tests/Reditus.UnitTests /p:CollectCoverage=true /p:Threshold=100
+dotnet test tests/Reditus.CompatibilityTests
+```
+
+Pull requests must keep line, branch and method coverage at 100%; the CI fails otherwise.
 
 ## License
 

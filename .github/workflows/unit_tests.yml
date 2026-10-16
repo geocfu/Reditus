@@ -2,10 +2,18 @@ name: Unit Tests
 
 on:
   pull_request:
+    branches:
+      - main
+      - develop
+  # Codecov needs a report for every commit on these branches; the coverage badge shows main.
+  push:
+    branches:
+      - main
+      - develop
 
 jobs:
   test:
-    name: Unit Tests    
+    name: Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -17,4 +25,12 @@ jobs:
           dotnet-version: '10.x.x'
 
       - name: Test
-        run: dotnet test tests/Reditus.UnitTests/Reditus.UnitTests.csproj --configuration Release
+        # Fails the run if line, branch or method coverage of the library drops below 100%.
+        run: dotnet test tests/Reditus.UnitTests/Reditus.UnitTests.csproj --configuration Release /p:CollectCoverage=true /p:Threshold=100 /p:CoverletOutputFormat=cobertura
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          files: tests/Reditus.UnitTests/coverage.cobertura.xml
+          disable_search: true
+          token: ${{ secrets.CODECOV_TOKEN }}
