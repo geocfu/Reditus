@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Reditus.Abstractions;
 using Reditus.Definitions;
 
@@ -134,6 +135,32 @@ namespace Reditus
         public static Result<T> Failure(Error error)
         {
             return new Result<T>(error);
+        }
+
+        /// <summary>
+        /// Creates a failed Result{T}. The Error is an <see cref="OperationCanceledError"/> if the provided token was
+        /// canceled; otherwise, the provided error.
+        /// </summary>
+        /// <param name="error">The error of the result if the token was not canceled.</param>
+        /// <param name="cancellationToken">The token of the operation that failed.</param>
+        /// <returns>A failed Result instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
+        public static Result<T> Failure(Error error, CancellationToken cancellationToken)
+        {
+            return new Result<T>(OperationCanceledErrorHelpers.FromCancellation(error, cancellationToken));
+        }
+
+        /// <summary>
+        /// Creates a failed Result{T} from a caught exception. The Error is an <see cref="OperationCanceledError"/>
+        /// if the exception was caused by the cancellation of the provided token; otherwise, an <see cref="Error"/>.
+        /// </summary>
+        /// <param name="exception">The caught exception.</param>
+        /// <param name="cancellationToken">The token of the operation that threw the exception.</param>
+        /// <returns>A failed Result instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when exception is null.</exception>
+        public static Result<T> Failure(Exception exception, CancellationToken cancellationToken)
+        {
+            return new Result<T>(OperationCanceledErrorHelpers.FromException(exception, cancellationToken));
         }
 
         /// <summary>

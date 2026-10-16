@@ -8,9 +8,12 @@ whether they succeeded, and why they did not.
 [![NuGet Version](https://img.shields.io/nuget/v/Reditus)](https://www.nuget.org/packages/Reditus)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Reditus)](https://www.nuget.org/packages/Reditus)
 [![License](https://img.shields.io/github/license/geocfu/Reditus)](https://github.com/geocfu/Reditus/blob/main/LICENSE)
+[![Unit Tests](https://github.com/geocfu/Reditus/actions/workflows/unit_tests.yml/badge.svg?event=pull_request)](https://github.com/geocfu/Reditus/actions/workflows/unit_tests.yml?query=event%3Apull_request)
+[![Compatibility Tests](https://github.com/geocfu/Reditus/actions/workflows/compatibility_tests.yml/badge.svg?event=pull_request)](https://github.com/geocfu/Reditus/actions/workflows/compatibility_tests.yml?query=event%3Apull_request)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/geocfu/Reditus/actions/workflows/unit_tests.yml?query=event%3Apull_request)
 
 ```csharp
-public Result<User> FindUser(int id)
+public Result<User> FindUser(int id, CancelationToken ct)
 {
     var user = _users.Find(id);
 
@@ -31,7 +34,9 @@ public Result<User> FindUser(int id)
 | **Detailed failures**   | Every failed result carries an `Error` with a message and, optionally, the exception. |
 | **Immutable**           | A result never changes after it is created, so it is safe to share across threads.    |
 | **Extensible**          | Derive your own error types, such as `NotFoundError` or `ValidationError`.            |
+| **Cancellation-aware**  | `Failure(exception, cancellationToken)` turns a canceled operation into an `OperationCanceledError`, so callers can tell it apart from a failure. |
 | **Runs everywhere**     | .NET Standard 2.0 and 2.1, and .NET 5 through .NET 10. No dependencies.               |
+| **Fully tested**        | 100% line and branch coverage, enforced on every pull request into `main` and `develop`. |
 
 ## Install
 
@@ -185,6 +190,60 @@ if (result.IsFailed)
 }
 
 return Ok(result.Value);
+```
+
+### Cancellation
+
+An `OperationCanceledError` tells callers that an operation was canceled, so they can tell a cancellation apart
+from a failure. Catch the exception once, where it is thrown, and pass the token to `Failure`:
+
+```csharp
+public async Task<Result<Report>> GetReportAsync(int id, CancellationToken cancellationToken)
+{
+    try
+    {
+        var report = await _client.GetReportAsync(id, cancellationToken);
+        return Result<Report>.Success(report);
+    }
+    catch (Exception exception)
+    {
+        return Result<Report>.Failure(exception, cancellationToken);
+    }
+}
+```
+
+The error is an `OperationCanceledError` only when the exception is an `OperationCanceledException` and
+`cancellationToken` was canceled. Any other exception, including an `OperationCanceledException` from a timeout
+while your token was not canceled, becomes a plain `Error`. Either way, `Error.Exception` holds the caught exception.
+Pass the result up like any other failure.
+
+In your own code, check the token instead of throwing:
+
+```csharp
+if (cancellationToken.IsCancellationRequested)
+{
+    return Result<Report>.Failure(new OperationCanceledError());
+}
+```
+
+When a step fails outside a `catch`, for example a call that returned no data because it was canceled, pass the
+token to `Failure` along with the error. You get an `OperationCanceledError` if the token was canceled, and
+otherwise the error you pass:
+
+```csharp
+if (report is null)
+{
+    return Result<Report>.Failure(new NotFoundError($"Report {id} was not found."), cancellationToken);
+}
+```
+
+Match on it at the edge of your application:
+
+```csharp
+if (result.IsFailed)
+{
+    return result.Error is OperationCanceledError ? new EmptyResult() : Problem(result.Error.Message);
+}
 ```
 
 ## Good to know

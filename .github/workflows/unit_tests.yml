@@ -2,6 +2,9 @@ name: Unit Tests
 
 on:
   pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   test:
@@ -17,4 +20,5 @@ jobs:
           dotnet-version: '10.x.x'
 
       - name: Test
-        run: dotnet test tests/Reditus.UnitTests/Reditus.UnitTests.csproj --configuration Release
+        # Fails the run if line, branch or method coverage of the library drops below 100%.
+        run: dotnet test tests/Reditus.UnitTests/Reditus.UnitTests.csproj --configuration Release /p:CollectCoverage=true /p:Threshold=100
