@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
-            5.0.x
             6.0.x
             7.0.x
             8.0.x
@@ -27,13 +26,13 @@ jobs:
 
       - name: Test
         run: |
-          for framework in net5.0 net6.0 net7.0 net8.0 net9.0 net10.0; do
+          for framework in net6.0 net7.0 net8.0 net9.0 net10.0; do
             dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework "$framework"
           done
 
   test-windows:
     name: Compatibility Tests (Windows)
-    # net48 needs .NET Framework. netcoreapp3.1 does not run on ubuntu-latest (24.04), which lacks the ICU and OpenSSL versions it supports.
+    # net48 needs .NET Framework. netcoreapp3.1 and net5.0 do not run on ubuntu-latest (24.04): they need OpenSSL 1.x, which it does not ship.
     runs-on: windows-latest
 
     steps:
@@ -44,6 +43,7 @@ jobs:
         with:
           dotnet-version: |
             3.1.x
+            5.0.x
             10.0.x
 
       # One step per framework: a multi-line PowerShell step reports only the exit code of its last command.
@@ -52,3 +52,6 @@ jobs:
 
       - name: Test netcoreapp3.1
         run: dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework netcoreapp3.1
+
+      - name: Test net5.0
+        run: dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework net5.0
