@@ -14,18 +14,36 @@ Reditus is a small, dependency-free **Result pattern** library for .NET. Your me
 whether they succeeded and, if not, why. Failures become values you can see in the signature, pass along and
 match on, instead of exceptions you have to remember to catch.
 
+- 🔍 **Honest signatures**: a method returning `Result<User>` tells its caller it can fail. No hidden exceptions.
+- 🧾 **Detailed failures**: every failed result carries an `Error` with a message and, optionally, the exception.
+- 🛑 **Cancellation-aware**: tell a canceled operation apart from a real failure with `OperationCanceledError`.
+- 🧩 **Extensible**: derive your own error types, such as `NotFoundError` or `ValidationError`.
+- 🔒 **Immutable**: a result never changes after it is created, so it is safe to share across threads.
+- 🌍 **Runs everywhere**: .NET Standard 2.0 and 2.1, and .NET 5 through .NET 10. Zero dependencies.
+- ✅ **Fully tested**: 100% line and branch coverage, enforced on every pull request into `main` and `develop`.
+
 ```csharp
 public async Task<Result<User>> FindUserAsync(int id, CancellationToken cancellationToken)
 {
-    var user = await _users.FindAsync(id, cancellationToken);
-
-    if (user is null)
+    try
     {
-        // An OperationCanceledError if the request was canceled, otherwise the NotFoundError
-        return Result<User>.Failure(new NotFoundError($"User {id} was not found."), cancellationToken);
-    }
+        var user = await _users.FindAsync(id, cancellationToken);
 
-    return Result<User>.Success(user);
+        if (user is null)
+        {
+            return Result<User>.Failure(new NotFoundError($"User {id} was not found."));
+        }
+
+        return Result<User>.Success(user);
+    }
+    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+    {
+        return Result<User>.Failure(new OperationCanceledError());
+    }
+    catch (Exception exception)
+    {
+        return Result<User>.Failure(new Error("Could not load the user.", exception));
+    }
 }
 ```
 
@@ -77,16 +95,6 @@ public Result<User> FindUser(int id)
         : Result<User>.Success(user);
 }
 ```
-
-|                          |                                                                                                   |
-|--------------------------|---------------------------------------------------------------------------------------------------|
-| 🔍 **Honest signatures** | A method returning `Result<User>` tells its caller it can fail. No hidden exceptions.             |
-| 🧾 **Detailed failures** | Every failed result carries an `Error` with a message and, optionally, the exception.             |
-| 🛑 **Cancellation-aware** | Tell a canceled operation apart from a real failure with `OperationCanceledError`.               |
-| 🧩 **Extensible**        | Derive your own error types, such as `NotFoundError` or `ValidationError`.                        |
-| 🔒 **Immutable**         | A result never changes after it is created, so it is safe to share across threads.                |
-| 🌍 **Runs everywhere**   | .NET Standard 2.0 and 2.1, and .NET 5 through .NET 10. Zero dependencies.                         |
-| ✅ **Fully tested**      | 100% line and branch coverage, enforced on every pull request into `main` and `develop`.          |
 
 ## Install
 
@@ -245,7 +253,7 @@ return Ok(result.Value);
 ### Cancellation
 
 An `OperationCanceledError` tells callers that an operation was canceled, so they can tell a cancellation apart
-from a failure. Catch the exception once, where it is thrown, and pass the token to `Failure`:
+from a failure. Catch the cancellation first, where it is thrown, and every other exception after it:
 
 ```csharp
 public async Task<Result<Report>> GetReportAsync(int id, CancellationToken cancellationToken)
@@ -255,16 +263,19 @@ public async Task<Result<Report>> GetReportAsync(int id, CancellationToken cance
         var report = await _client.GetReportAsync(id, cancellationToken);
         return Result<Report>.Success(report);
     }
+    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+    {
+        return Result<Report>.Failure(new OperationCanceledError());
+    }
     catch (Exception exception)
     {
-        return Result<Report>.Failure(exception, cancellationToken);
+        return Result<Report>.Failure(new Error("Could not load the report.", exception));
     }
 }
 ```
 
-The error is an `OperationCanceledError` only when the exception is an `OperationCanceledException` and
-`cancellationToken` was canceled. Any other exception, including an `OperationCanceledException` from a timeout
-while your token was not canceled, becomes a plain `Error`. Either way, `Error.Exception` holds the caught exception.
+The `when` filter matters: an `HttpClient` timeout also throws an `OperationCanceledException` while your token was
+not canceled. That is a real failure, so it falls through to the second `catch`. Use any error type you like there.
 Pass the result up like any other failure.
 
 In your own code, check the token instead of throwing:
@@ -273,17 +284,6 @@ In your own code, check the token instead of throwing:
 if (cancellationToken.IsCancellationRequested)
 {
     return Result<Report>.Failure(new OperationCanceledError());
-}
-```
-
-When a step fails outside a `catch`, for example a call that returned no data because it was canceled, pass the
-token to `Failure` along with the error. You get an `OperationCanceledError` if the token was canceled, and
-otherwise the error you pass:
-
-```csharp
-if (report is null)
-{
-    return Result<Report>.Failure(new NotFoundError($"Report {id} was not found."), cancellationToken);
 }
 ```
 

@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using Reditus.Abstractions;
 using Reditus.Definitions;
 using Xunit;
@@ -173,32 +172,11 @@ namespace Reditus.CompatibilityTests
         [Fact]
         public void Cancellation_Can_Be_Told_Apart_From_A_Failure()
         {
-            var exception = new OperationCanceledException();
-            var canceled = Result<int>.Failure(new OperationCanceledError(exception));
+            var canceled = Result<int>.Failure(new OperationCanceledError());
             var outer = Result<string>.Failure(canceled);
 
             Assert.True(outer.Error is OperationCanceledError);
-            Assert.Same(exception, outer.Error.Exception);
             Assert.False(Divide(1, 0).Error is OperationCanceledError);
-        }
-
-        [Fact]
-        public void Caught_Exception_Becomes_OperationCanceledError_Only_When_The_Token_Was_Canceled()
-        {
-            var exception = new OperationCanceledException();
-
-            Assert.True(Result.Failure(exception, new CancellationToken(true)).Error is OperationCanceledError);
-            Assert.False(Result<int>.Failure(exception, CancellationToken.None).Error is OperationCanceledError);
-        }
-
-        [Fact]
-        public void Failure_Outside_A_Catch_Becomes_OperationCanceledError_Only_When_The_Token_Was_Canceled()
-        {
-            var error = new NotFoundError("Not found.");
-
-            Assert.True(Result.Failure(error, new CancellationToken(true)).Error is OperationCanceledError);
-            Assert.True(Result<int>.Failure(error, new CancellationToken(true)).Error is OperationCanceledError);
-            Assert.Same(error, Result<int>.Failure(error, CancellationToken.None).Error);
         }
 
         [Fact]
