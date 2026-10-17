@@ -1,5 +1,3 @@
-using System;
-
 namespace Reditus.Definitions
 {
     /// <summary>
@@ -14,16 +12,6 @@ namespace Reditus.Definitions
         /// </summary>
         public OperationCanceledError()
             : base("The operation was canceled.")
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OperationCanceledError"/> class with the exception that signaled the cancellation.
-        /// </summary>
-        /// <param name="exception">The exception that signaled the cancellation.</param>
-        /// <exception cref="ArgumentNullException">Thrown if the provided exception is null.</exception>
-        public OperationCanceledError(OperationCanceledException exception)
-            : base("The operation was canceled.", exception)
         {
         }
     }
