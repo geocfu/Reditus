@@ -4,7 +4,7 @@ using Reditus.Abstractions;
 namespace Reditus.Definitions
 {
     /// <summary>
-    /// Represents a Failure object that encapsulates an error message and an optional exception.
+    /// Represents an Error object that encapsulates an error message and an optional exception.
     /// Implements the <see cref="IError"/> interface.
     /// </summary>
     public class Error : IError
@@ -12,7 +12,7 @@ namespace Reditus.Definitions
         /// <summary>
         /// Backing field for the Message property.
         /// </summary>
-        private string _message = "An error occured.";
+        private string _message = "An error occurred.";
 
         /// <inheritdoc />
         public string Message
@@ -28,9 +28,14 @@ namespace Reditus.Definitions
             private set
 #endif
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (value == null)
                 {
                     throw new ArgumentNullException(nameof(value), "The Message property must have a value.");
+                }
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("The Message property must have a value.", nameof(value));
                 }
 
                 _message = value;
@@ -77,8 +82,9 @@ namespace Reditus.Definitions
         /// Initializes a new instance of the <see cref="Error"/> class with a specified message.
         /// The Exception property will be initialized to null.
         /// </summary>
-        /// <param name="message">The message that describes the Failure.</param>
+        /// <param name="message">The message that describes the Error.</param>
         /// <exception cref="ArgumentNullException">Thrown if the provided message is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if the provided message is empty or whitespace.</exception>
         public Error(string message)
         {
             Message = message;
@@ -88,7 +94,7 @@ namespace Reditus.Definitions
         /// Initializes a new instance of the <see cref="Error"/> class with a specified exception.
         /// The Message property will have its default value of "An error occurred.".
         /// </summary>
-        /// <param name="exception">The exception to attach to the Failure.</param>
+        /// <param name="exception">The exception to attach to the Error.</param>
         /// <exception cref="ArgumentNullException">Thrown if the provided exception is null.</exception>
         public Error(Exception exception)
         {
@@ -98,9 +104,10 @@ namespace Reditus.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="Error"/> class with a specified message and exception.
         /// </summary>
-        /// <param name="message">The message that describes the Failure.</param>
-        /// <param name="exception">The exception to attach to the Failure.</param>
+        /// <param name="message">The message that describes the Error.</param>
+        /// <param name="exception">The exception to attach to the Error.</param>
         /// <exception cref="ArgumentNullException">Thrown if the provided message is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if the provided message is empty or whitespace.</exception>
         /// <exception cref="ArgumentNullException">Thrown if the provided exception is null.</exception>
         public Error(string message, Exception exception)
         {
@@ -111,10 +118,11 @@ namespace Reditus.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="Error"/> class with a specified message and exception.
         /// </summary>
-        /// <param name="exception">The exception to attach to the Failure.</param>
-        /// <param name="message">The message that describes the Failure.</param>
+        /// <param name="exception">The exception to attach to the Error.</param>
+        /// <param name="message">The message that describes the Error.</param>
         /// <exception cref="ArgumentNullException">Thrown if the provided exception is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown if the provided message is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if the provided message is empty or whitespace.</exception>
         public Error(Exception exception, string message)
         {
             Exception = exception;

@@ -10,12 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.x.x'
+
+      - name: Check tag matches version
+        run: |
+          VERSION=$(dotnet msbuild src/Reditus -getProperty:Version)
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match version $VERSION in Reditus.csproj"
+            exit 1
+          fi
 
       - name: Restore dependencies
         run: dotnet restore

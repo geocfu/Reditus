@@ -1,0 +1,57 @@
+name: Compatibility Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test-linux:
+    name: Compatibility Tests (Linux)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Test
+        run: |
+          for framework in net6.0 net7.0 net8.0 net9.0 net10.0; do
+            dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework "$framework"
+          done
+
+  test-windows:
+    name: Compatibility Tests (Windows)
+    # net48 needs .NET Framework. netcoreapp3.1 and net5.0 do not run on ubuntu-latest (24.04): they need OpenSSL 1.x, which it does not ship.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            10.0.x
+
+      # One step per framework: a multi-line PowerShell step reports only the exit code of its last command.
+      - name: Test net48
+        run: dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework net48
+
+      - name: Test netcoreapp3.1
+        run: dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework netcoreapp3.1
+
+      - name: Test net5.0
+        run: dotnet test tests/Reditus.CompatibilityTests --configuration Release --framework net5.0

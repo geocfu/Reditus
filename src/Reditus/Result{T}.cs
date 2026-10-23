@@ -39,7 +39,7 @@ namespace Reditus
                 {
                     throw new ArgumentNullException(
                         nameof(value),
-                        "The Success property cannot be null.");
+                        "The Value property cannot be null.");
                 }
 
                 _value = value;
@@ -47,7 +47,7 @@ namespace Reditus
         }
 
         /// <summary>
-        /// The internal failure, if any, of the Result.
+        /// The internal error, if any, of the Result.
         /// </summary>
         private Error _error;
 
@@ -59,7 +59,7 @@ namespace Reditus
                 if (State == State.Successful)
                 {
                     throw new InvalidOperationException(
-                        "Accessing the Failure property of a successful Result is invalid.");
+                        "Accessing the Error property of a successful Result is invalid.");
                 }
 
                 return _error;
@@ -71,7 +71,7 @@ namespace Reditus
                 {
                     throw new ArgumentNullException(
                         nameof(value),
-                        "The Failure property cannot be null.");
+                        "The Error property cannot be null.");
                 }
 
                 _error = value;
@@ -87,8 +87,8 @@ namespace Reditus
         /// <summary>
         /// Initializes a new instance of the <see cref="Result{T}"/> class.
         /// </summary>
-        /// <param name="value">The success of the Result.</param>
-        /// <exception cref="ArgumentNullException">Thrown when success is null.</exception>
+        /// <param name="value">The value of the Result.</param>
+        /// <exception cref="ArgumentNullException">Thrown when value is null.</exception>
         protected Result(T value)
         {
             State = State.Successful;
@@ -98,8 +98,8 @@ namespace Reditus
         /// <summary>
         /// Initializes a new instance of the <see cref="Result{T}"/> class.
         /// </summary>
-        /// <param name="error">The failure to attach to the Result.</param>
-        /// <exception cref="ArgumentNullException">Thrown when failure is null.</exception>
+        /// <param name="error">The error to attach to the Result.</param>
+        /// <exception cref="ArgumentNullException">Thrown when error is null.</exception>
         protected Result(Error error)
         {
             State = State.Failed;
@@ -107,27 +107,11 @@ namespace Reditus
         }
 
         /// <summary>
-        /// Implicitly converts a value of type <typeparamref name="T"/> into a successful <see cref="Result{T}"/>.
-        /// This allows a direct assignment of a value to a <see cref="Result{T}"/> without explicitly calling <see cref="Result{T}.CreateSuccess(T)"/>.
-        /// </summary>
-        /// <param name="value">The value to be wrapped in a successful <see cref="Result{T}"/>.</param>
-        /// <returns>A successful <see cref="Result{T}"/> instance containing the provided value.</returns>
-        public static implicit operator Result<T>(T value) => new Result<T>(value);
-
-        /// <summary>
-        /// Implicitly converts an <see cref="Error"/> into a failed <see cref="Result{T}"/>.
-        /// This allows a direct assignment of an <see cref="Error"/> to a <see cref="Result{T}"/> without explicitly calling CreateFail(Error)">.
-        /// </summary>
-        /// <param name="error">The error to be wrapped in a failed <see cref="Result{T}"/>.</param>
-        /// <returns>A failed <see cref="Result{T}"/> instance containing the provided error.</returns>
-        public static implicit operator Result<T>(Error error) => new Result<T>(error);
-
-        /// <summary>
         /// Creates a successful Result{T}.
         /// </summary>
-        /// <param name="value">The success object of the result.</param>
+        /// <param name="value">The value of the result.</param>
         /// <returns>A successful Result instance.</returns>
-        public static Result<T> CreateSuccess(T value)
+        public static Result<T> Success(T value)
         {
             return new Result<T>(value);
         }
@@ -136,18 +120,18 @@ namespace Reditus
         /// Creates a failed Result{T}.
         /// </summary>
         /// <returns>A failed Result instance.</returns>
-        public static Result<T> CreateFail()
+        public static Result<T> Failure()
         {
             var failure = new Error();
-            return CreateFail(failure);
+            return Failure(failure);
         }
 
         /// <summary>
         /// Creates a failed Result{T}.
         /// </summary>
-        /// <param name="error">The failure object of the result.</param>
+        /// <param name="error">The error of the result.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result<T> CreateFail(Error error)
+        public static Result<T> Failure(Error error)
         {
             return new Result<T>(error);
         }
@@ -158,7 +142,7 @@ namespace Reditus
         /// <param name="result">The Result to copy from.</param>
         /// <returns>A failed Result instance.</returns>
         /// <typeparam name="TY">The type of the Result to copy from.</typeparam>
-        public static Result<T> CreateFail<TY>(Result<TY> result)
+        public static Result<T> Failure<TY>(Result<TY> result)
         {
             if (result == null)
             {
